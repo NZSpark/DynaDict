@@ -28,7 +28,8 @@ namespace DynaDict
             string SQL_CREATE_DictList =
                "CREATE TABLE DictList (" +
                "DictID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-               "DictName TEXT)";
+               "DictName TEXT, " + 
+               "DictDescription TEXT)";
             SQLiteCommand command = new SQLiteCommand(SQL_CREATE_DictList, m_dbConnection);
             command.ExecuteNonQuery();
 
@@ -66,7 +67,7 @@ namespace DynaDict
             m_dbConnection.Open();
 
             //insert DictList
-            SQLiteCommand command = new SQLiteCommand("insert into DictList (DictName) values ('" + ddm.sDictName + "')", m_dbConnection);
+            SQLiteCommand command = new SQLiteCommand("insert into DictList (DictName,DictDescription) values ('" + ddm.sDictName + "','" + ddm.sDictDescription +  "')", m_dbConnection);
             sDictID = command.ExecuteNonQuery().ToString();
 
             //insert URLList
@@ -111,14 +112,15 @@ namespace DynaDict
             string sDictID = "";
             m_dbConnection.Open();
                         
-            SQLiteCommand command = new SQLiteCommand("select DictID from DictList where DictName = '" + DictName + "'" , m_dbConnection);
+            SQLiteCommand command = new SQLiteCommand("select * from DictList where DictName = '" + DictName + "'" , m_dbConnection);
 
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     sDictID = reader["DictID"].ToString();
-                    Console.WriteLine(sDictID);
+                    ddm.sDictDescription = reader["DictDescription"].ToString();
+                    Console.WriteLine(sDictID + ":" + ddm.sDictDescription);
                 }
             }
 

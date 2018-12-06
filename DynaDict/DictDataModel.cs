@@ -17,6 +17,7 @@ namespace DynaDict
     class DictDataModel
     {
         public string sDictName = "embryo";
+        public string sDictDescription = "Gene editing.";
         public string [] sSourceLinks = {
             "https://www.theguardian.com/science/2018/nov/28/scientist-in-china-defends-human-embryo-gene-editing",
             "https://www.theguardian.com/science/2018/nov/26/worlds-first-gene-edited-babies-created-in-china-claims-scientist"

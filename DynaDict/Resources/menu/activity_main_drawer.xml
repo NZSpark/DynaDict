@@ -5,19 +5,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/menu_createdict"
             android:icon="@drawable/ic_menu_camera"
-            android:title="CreatDict" />
+            android:title="CreateDict" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/menu_dictlist"
             android:icon="@drawable/ic_menu_gallery"
             android:title="DictList" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/menu_opendicts"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="OpenDicts" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/menu_tools"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />
     </group>

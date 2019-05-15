@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynaDict", "DynaDict\DynaDict.csproj", "{07272096-7498-4F50-B9FC-AA5202BDA99D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FragmentSample", "FragmentSample\FragmentSample.csproj", "{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,12 @@ Global
 		{07272096-7498-4F50-B9FC-AA5202BDA99D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07272096-7498-4F50-B9FC-AA5202BDA99D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07272096-7498-4F50-B9FC-AA5202BDA99D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE4FE795-B6DF-4BD1-BF1E-492B5F731CDC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,6 +14,7 @@ namespace DynaDict
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        NavigationView navigationView;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,7 +30,7 @@ namespace DynaDict
             drawer.AddDrawerListener(toggle);
             toggle.SyncState();
 
-            NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
         }
 
@@ -73,20 +74,21 @@ namespace DynaDict
         public bool OnNavigationItemSelected(IMenuItem item)
         {
             int id = item.ItemId;
+            Fragment fragment =  null;
 
-            if (id == Resource.Id.nav_camera)
+            if (id == Resource.Id.menu_createdict)
             {
-                // Handle the camera action
+                fragment = new CreateDict();
             }
-            else if (id == Resource.Id.nav_gallery)
+            else if (id == Resource.Id.menu_dictlist)
             {
-
+                fragment = new OpenDict();
             }
-            else if (id == Resource.Id.nav_slideshow)
+            else if (id == Resource.Id.menu_opendicts)
             {
-
+                fragment = new OpenDict();
             }
-            else if (id == Resource.Id.nav_manage)
+            else if (id == Resource.Id.menu_tools)
             {
 
             }
@@ -99,7 +101,12 @@ namespace DynaDict
 
             }
 
-            DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            if (fragment != null)
+            {
+                FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
+            }
+
+            DrawerLayout drawer = (DrawerLayout)FindViewById(Resource.Id.drawer_layout);
             drawer.CloseDrawer(GravityCompat.Start);
             return true;
         }

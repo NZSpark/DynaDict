@@ -71,14 +71,14 @@ namespace DynaDict
             sDictID = command.ExecuteNonQuery().ToString();
 
             //insert URLList
-            for (int i = 0; i < ddm.sSourceLinks.Length; i++)
+            for (int i = 0; i < ddm.sSourceLinks.Count; i++)
             {
                 command.CommandText = "insert into URLList (DictID, URL) values ('" + sDictID + "','" + ddm.sSourceLinks[i] + "')";
                 command.ExecuteNonQuery();
             }
 
             //insert Vocabulary and DictWord
-            for (int i = 0; i < ddm.DictWordList.Length; i++)
+            for (int i = 0; i < ddm.DictWordList.Count; i++)
             {
 
                 string sWordID = "";
@@ -142,8 +142,8 @@ namespace DynaDict
                     VocabularyDataModel vdm = new VocabularyDataModel();
                     vdm.sVocabulary = reader["WordName"].ToString();
                     vdm.sPhonics = reader["Phonics"].ToString();
-                    vdm.sEnglishDefinition = reader["EnglishDefinition"].ToString().Split(new char [] { '\n' });
-                    vdm.sChineseDefinition = reader["ChineseDefinition"].ToString().Split(new char [] { '\n' });
+                    vdm.sEnglishDefinition = new List<string> (reader["EnglishDefinition"].ToString().Split(new char [] { '\n' }));
+                    vdm.sChineseDefinition = new List<string>(reader["ChineseDefinition"].ToString().Split(new char [] { '\n' }));
                     ddm.DictWordList.Append(vdm);                    
                 }
             }

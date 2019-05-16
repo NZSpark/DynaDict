@@ -18,12 +18,42 @@ namespace DynaDict
     {
         public string sDictName = "embryo";
         public string sDictDescription = "Gene editing.";
-        public string [] sSourceLinks = {
+        public List<string> sSourceLinks = new List<string> {
             "https://www.theguardian.com/science/2018/nov/28/scientist-in-china-defends-human-embryo-gene-editing",
             "https://www.theguardian.com/science/2018/nov/26/worlds-first-gene-edited-babies-created-in-china-claims-scientist"
         };
-        public VocabularyDataModel[] DictWordList;
+        public List<VocabularyDataModel> DictWordList = new List<VocabularyDataModel>() ;
 
+        //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
+        public VocabularyDataModel LookupWord(string sWord)
+        {
+            foreach(var v in DictWordList)
+            {
+                if (v.sVocabulary.Equals(sWord))
+                    return v;
+            }
+            return null;
+        }
+
+        public void UpdateDictWord()
+        {
+            if(sSourceLinks.Count >0)
+            {
+                foreach(var s in sSourceLinks)
+                {
+                    //get all words in a url
+                    List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
+                    foreach (var v in tmpWordList)
+                    {
+                        //add word into dictionary if it does not exist.
+                        if (LookupWord(v).Equals(null))
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
         public string LoadWebPage(string sWebPageURL)
         {
             string sResult = null;
@@ -54,7 +84,7 @@ namespace DynaDict
         }
 
         //Generate a list of unique words. 
-        public string[] GetWordListFromString(string sInput)
+        public List<string> GetWordListFromString(string sInput)
         {
             char [] sResult = sInput.ToArray();
            
@@ -68,7 +98,7 @@ namespace DynaDict
 
             string [] sWordList = new string(sResult).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             sWordList = sWordList.Distinct().ToArray();
-            return sWordList;
+            return new List<string>(sWordList);
         }
 
 
@@ -82,12 +112,12 @@ namespace DynaDict
 
         public bool bShowChineseDefinition = true;
 
-        public string [] sEnglishDefinition = {
+        public List<string> sEnglishDefinition = new List<string> {
             "an unborn or unhatched offspring in the process of development." ,
             "the part of a seed that develops into a plant, consisting (in the mature embryo of a higher plant) of a plumule, a radicle, and one or two cotyledons."
         };
-        public string[] sChineseDefinition = {"胎" };
-        public string[] sSentences = { "They are engaging in an embryo research." };
+        public List<string> sChineseDefinition = new List<string> {"胎" };
+        public List<string> sSentences = new List<string>  { "They are engaging in an embryo research." };
 
         public string GetDefinition(string sWord)
         {
@@ -99,7 +129,7 @@ namespace DynaDict
         //http://www.dict.cn/embryo
         public void ExtractDefinitionFromDicCN(string sInput)
         {
-            string [] sED = { "" };
+            List<string> sED = new List<string> { "" };
             sEnglishDefinition = sED;
             sChineseDefinition = sED;
             sSentences = sED;

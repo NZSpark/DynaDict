@@ -2472,7 +2472,7 @@ namespace DynaDict
 			public const int btAdd = 2131230881;
 			
 			// aapt resource value: 0x7f0800a4
-			public const int btCreat = 2131230884;
+			public const int btCreate = 2131230884;
 			
 			// aapt resource value: 0x7f080063
 			public const int buttonPanel = 2131230819;

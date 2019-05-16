@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 
+using System.Text;
+using System.Xml;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using HtmlAgilityPack;
 
 namespace DynaDict
 {
@@ -25,7 +27,7 @@ namespace DynaDict
         public List<VocabularyDataModel> DictWordList = new List<VocabularyDataModel>() ;
 
         //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
-        public VocabularyDataModel LookupWord(string sWord)
+        public VocabularyDataModel LookupWordLocal(string sWord)
         {
             foreach(var v in DictWordList)
             {
@@ -34,6 +36,15 @@ namespace DynaDict
             }
             return null;
         }
+
+        public VocabularyDataModel LookupWordOnline(string sWord)
+        {
+            VocabularyDataModel vdm = new VocabularyDataModel();
+            if(vdm.ExtractDefinitionFromDicCN(sWord))
+                return vdm;
+            return null;
+        }
+
 
         public void UpdateDictWord()
         {
@@ -46,14 +57,17 @@ namespace DynaDict
                     foreach (var v in tmpWordList)
                     {
                         //add word into dictionary if it does not exist.
-                        if (LookupWord(v).Equals(null))
+                        if (LookupWordLocal(v) == null)
                         {
-
+                            VocabularyDataModel vdm = LookupWordOnline(v);
+                            if (vdm != null)
+                                DictWordList.Add(vdm);
                         }
                     }
                 }
             }
         }
+
         public string LoadWebPage(string sWebPageURL)
         {
             string sResult = null;
@@ -127,12 +141,25 @@ namespace DynaDict
         }
 
         //http://www.dict.cn/embryo
-        public void ExtractDefinitionFromDicCN(string sInput)
+        public bool ExtractDefinitionFromDicCN(string sWord)
         {
+            DictDataModel ddm = new DictDataModel();
+            string sDicCNIn = ddm.LoadWebPage("http://www.dict.cn/" + sWord);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(sDicCNIn);
+
+            List<HtmlNode> photicList = doc.DocumentNode.Descendants().Where
+(x => (x.Name == "div" && x.Attributes["class"] != null &&
+   x.Attributes["class"].Value.Contains("phonetic"))).ToList();
+
+            sPhonics = photicList[0].ToString();
+
             List<string> sED = new List<string> { "" };
             sEnglishDefinition = sED;
             sChineseDefinition = sED;
             sSentences = sED;
+
+            return true;
         }
 
     }

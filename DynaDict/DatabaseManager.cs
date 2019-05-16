@@ -85,12 +85,12 @@ namespace DynaDict
                 string sE = "";
                 string sC = "";
 
-                for(int j = 0; j < ddm.DictWordList[i].sChineseDefinition.Length; j++)
+                for(int j = 0; j < ddm.DictWordList[i].sChineseDefinition.Count; j++)
                 {
                     sC = sC + ddm.DictWordList[i].sChineseDefinition[j] + "\n";
                 }
 
-                for (int j = 0; j < ddm.DictWordList[i].sEnglishDefinition.Length; j++)
+                for (int j = 0; j < ddm.DictWordList[i].sEnglishDefinition.Count; j++)
                 {
                     sE = sE + ddm.DictWordList[i].sEnglishDefinition[j] + "\n";
                 }

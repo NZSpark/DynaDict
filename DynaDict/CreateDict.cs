@@ -47,6 +47,7 @@ namespace DynaDict
                     }
                 }
                 ddm.sDictName = etDictName.Text;
+                ddm.UpdateDictWord();
 
             };
 

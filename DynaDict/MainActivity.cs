@@ -90,7 +90,7 @@ namespace DynaDict
             }
             else if (id == Resource.Id.menu_tools)
             {
-
+                fragment = new UtilityTools();
             }
             else if (id == Resource.Id.nav_share)
             {

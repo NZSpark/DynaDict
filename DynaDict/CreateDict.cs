@@ -41,7 +41,7 @@ namespace DynaDict
                 DictDataModel ddm = new DictDataModel();
 
                 //only for test.
-                etURLList.Text = "http://localhost:62526/blank.html";
+                etURLList.Text = "http://localhost:8080";
 
                 foreach (string s in etURLList.Text.Split("\r\n"))
                 {

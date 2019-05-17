@@ -12,18 +12,20 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.IO;
+using Environment = System.Environment;
 
 namespace DynaDict
 {
     class DatabaseManager
     {
-        private const string DatabaseFileName = "./DynaDict.Sqlite.db";
+        private static string DatabaseFileName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/DynaDict.Sqlite.db";
         //private const string DatabaseSource = "data source=" + DatabaseFileName + ";Version=3;";
-        private const string DatabaseSource = "Filename=" + DatabaseFileName; //Filename = -> relative path; Data Source= -> absolute path.
+        private static string DatabaseSource = "Filename=" + DatabaseFileName; //Filename = -> relative path; Data Source= -> absolute path.
         SqliteConnection m_dbConnection = new SqliteConnection(DatabaseSource);
         public void InitializeDB()
         {
-            CreateFile(DatabaseFileName);
+            if(File.Exists(DatabaseFileName))
+                File.Delete(DatabaseFileName);
 
             m_dbConnection.Open();
 
@@ -54,8 +56,9 @@ namespace DynaDict
 
             command.CommandText =
                 "CREATE TABLE DictWord (" +
-                "WordID INTEGER PRIMARY KEY," +
-                "DictID INTEGER PRIMARY KEY)";
+                "WordID INTEGER ," +
+                "DictID INTEGER ," +
+                " PRIMARY KEY(WordID,DictID))";
             command.ExecuteNonQuery();
 
             m_dbConnection.Close();
@@ -72,8 +75,6 @@ namespace DynaDict
         public void StoreDictToDB(DictDataModel ddm)
         {
             string sDictID = "";
-            if (!File.Exists(DatabaseFileName))
-                InitializeDB();
 
             m_dbConnection.Open();
       
@@ -106,7 +107,11 @@ namespace DynaDict
                     sE = sE + ddm.DictWordList[i].sEnglishDefinition[j] + "\n";
                 }
 
-                command.CommandText = "insert into Vocabulary (WordName,Phonics,ChineseDefinition,EnglishDefinition) values ('" + ddm.DictWordList[i].sVocabulary + "','" + ddm.DictWordList[i].sPhonics + "','" + sC + "','" + sE + "')";
+                command.CommandText = "insert into Vocabulary (WordName,Phonics,ChineseDefinition,EnglishDefinition) values ('" 
+                    + ddm.DictWordList[i].sVocabulary + "','" 
+                    + ddm.DictWordList[i].sPhonics.Replace("'", "''") + "','" 
+                    + sC.Replace("'", "''") + "','" 
+                    + sE.Replace("'", "''") + "')";
                 sWordID = command.ExecuteNonQuery().ToString();
 
                 command.CommandText = "insert into DictWord (WordID,DictID) values ('" + sWordID + "','" + sDictID + "')";

@@ -20,10 +20,7 @@ namespace DynaDict
     {
         public string sDictName = "embryo";
         public string sDictDescription = "Gene editing.";
-        public List<string> sSourceLinks = new List<string> {
-            "https://www.theguardian.com/science/2018/nov/28/scientist-in-china-defends-human-embryo-gene-editing",
-            "https://www.theguardian.com/science/2018/nov/26/worlds-first-gene-edited-babies-created-in-china-claims-scientist"
-        };
+        public List<string> sSourceLinks = new List<string>();
         public List<VocabularyDataModel> DictWordList = new List<VocabularyDataModel>() ;
 
         //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
@@ -53,7 +50,12 @@ namespace DynaDict
                 foreach(var s in sSourceLinks)
                 {
                     //get all words in a url
-                    List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
+                    //List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
+                    List<string> tmpWordList = new List<string> { "hello", "world" };
+
+                    if (tmpWordList is null)
+                        continue;
+
                     foreach (var v in tmpWordList)
                     {
                         //add word into dictionary if it does not exist.
@@ -100,6 +102,8 @@ namespace DynaDict
         //Generate a list of unique words. 
         public List<string> GetWordListFromString(string sInput)
         {
+            if (sInput == null)
+                return null;
             char [] sResult = sInput.ToArray();
            
             for (int i = 0; i < sResult.Length; i++)
@@ -121,17 +125,14 @@ namespace DynaDict
 
     class VocabularyDataModel
     {
-        public string sVocabulary = "embryo";
-        public string sPhonics = "ˈembrēˌō";
+        public string sVocabulary ;
+        public string sPhonics;
 
         public bool bShowChineseDefinition = true;
 
-        public List<string> sEnglishDefinition = new List<string> {
-            "an unborn or unhatched offspring in the process of development." ,
-            "the part of a seed that develops into a plant, consisting (in the mature embryo of a higher plant) of a plumule, a radicle, and one or two cotyledons."
-        };
-        public List<string> sChineseDefinition = new List<string> {"胎" };
-        public List<string> sSentences = new List<string>  { "They are engaging in an embryo research." };
+        public List<string> sEnglishDefinition = new List<string>();
+        public List<string> sChineseDefinition = new List<string>();
+        public List<string> sSentences = new List<string>();
 
         public string GetDefinition(string sWord)
         {
@@ -148,16 +149,54 @@ namespace DynaDict
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(sDicCNIn);
 
-            List<HtmlNode> photicList = doc.DocumentNode.Descendants().Where
-(x => (x.Name == "div" && x.Attributes["class"] != null &&
-   x.Attributes["class"].Value.Contains("phonetic"))).ToList();
+            sVocabulary = sWord;
 
-            sPhonics = photicList[0].ToString();
+            //extrict phonics
+            List<HtmlNode> photicList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("phonetic"))).ToList();
+            if (photicList.Count > 0)
+            {
+                if(photicList[0].Descendants("bdo").ToList().Count > 0)
+                    sPhonics = photicList[0].Descendants("bdo").ToList()[0].InnerText;
+            }
 
-            List<string> sED = new List<string> { "" };
-            sEnglishDefinition = sED;
-            sChineseDefinition = sED;
-            sSentences = sED;
+            //extrict Chinese definition
+            List<HtmlNode> divCNList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("basic clearfix"))).ToList();
+            if (divCNList.Count > 0)
+            {
+                if(divCNList[0].Descendants("li").ToList().Count > 0)
+                sChineseDefinition.Add(divCNList[0].Descendants("li").ToList()[0].InnerText.Replace("\t", ""));
+            }
+            divCNList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout dual"))).ToList();
+            if (divCNList.Count > 0)
+            {
+                var liCN = divCNList[0].Descendants("li").ToList();
+                foreach (var li in liCN)
+                {
+                    sChineseDefinition.Add(li.InnerText.Replace("\t",""));
+                }
+            }
+
+            //extrict Chinese definition
+            List<HtmlNode> divENList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout en"))).ToList();
+            if (divENList.Count > 0)
+            {
+                var liEN = divENList[0].Descendants("li").ToList();
+                foreach (var li in liEN)
+                {
+                    sEnglishDefinition.Add(li.InnerText.Replace("\t", ""));
+                }
+            }
+
+            //extrict sentences
+            List<HtmlNode> divSTList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout sort"))).ToList();
+            if (divSTList.Count > 0)
+            {
+                var liST = divSTList[0].Descendants("li").ToList();
+                foreach (var li in liST)
+                {
+                    sSentences.Add(li.InnerText);
+                }
+            }
 
             return true;
         }

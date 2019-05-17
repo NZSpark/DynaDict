@@ -39,6 +39,10 @@ namespace DynaDict
             btCreate.Click += delegate
             {
                 DictDataModel ddm = new DictDataModel();
+
+                //only for test.
+                etURLList.Text = "http://localhost:62526/blank.html";
+
                 foreach (string s in etURLList.Text.Split("\r\n"))
                 {
                     if (!s.Equals(""))
@@ -48,7 +52,8 @@ namespace DynaDict
                 }
                 ddm.sDictName = etDictName.Text;
                 ddm.UpdateDictWord();
-
+                DatabaseManager dm = new DatabaseManager();
+                dm.StoreDictToDB(ddm);
             };
 
             // Use this to return your custom view for this Fragment

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Linq;
 using System.Text;
 
@@ -11,17 +11,19 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.IO;
 
 namespace DynaDict
 {
     class DatabaseManager
     {
-        private const string DatabaseFileName = "DynaDict.sqlite";
-        private const string DatabaseSource = "data source=" + DatabaseFileName + ";Version=3;";
-        SQLiteConnection m_dbConnection = new SQLiteConnection(DatabaseSource);
+        private const string DatabaseFileName = "./DynaDict.Sqlite.db";
+        //private const string DatabaseSource = "data source=" + DatabaseFileName + ";Version=3;";
+        private const string DatabaseSource = "Filename=" + DatabaseFileName; //Filename = -> relative path; Data Source= -> absolute path.
+        SqliteConnection m_dbConnection = new SqliteConnection(DatabaseSource);
         public void InitializeDB()
         {
-            SQLiteConnection.CreateFile(DatabaseFileName);
+            CreateFile(DatabaseFileName);
 
             m_dbConnection.Open();
 
@@ -30,7 +32,7 @@ namespace DynaDict
                "DictID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                "DictName TEXT, " + 
                "DictDescription TEXT)";
-            SQLiteCommand command = new SQLiteCommand(SQL_CREATE_DictList, m_dbConnection);
+            SqliteCommand command = new SqliteCommand(SQL_CREATE_DictList, m_dbConnection);
             command.ExecuteNonQuery();
 
             command.CommandText =
@@ -60,14 +62,23 @@ namespace DynaDict
 
         }
 
+        static public void CreateFile(string databaseFileName)
+        {
+            FileStream fs = File.Create(databaseFileName);
+            fs.Close();
+        }
+
+
         public void StoreDictToDB(DictDataModel ddm)
         {
             string sDictID = "";
+            if (!File.Exists(DatabaseFileName))
+                InitializeDB();
 
             m_dbConnection.Open();
-
+      
             //insert DictList
-            SQLiteCommand command = new SQLiteCommand("insert into DictList (DictName,DictDescription) values ('" + ddm.sDictName + "','" + ddm.sDictDescription +  "')", m_dbConnection);
+            SqliteCommand command = new SqliteCommand("insert into DictList (DictName,DictDescription) values ('" + ddm.sDictName + "','" + ddm.sDictDescription +  "')", m_dbConnection);
             sDictID = command.ExecuteNonQuery().ToString();
 
             //insert URLList
@@ -112,7 +123,7 @@ namespace DynaDict
             string sDictID = "";
             m_dbConnection.Open();
                         
-            SQLiteCommand command = new SQLiteCommand("select * from DictList where DictName = '" + DictName + "'" , m_dbConnection);
+            SqliteCommand command = new SqliteCommand("select * from DictList where DictName = '" + DictName + "'" , m_dbConnection);
 
             using (var reader = command.ExecuteReader())
             {
@@ -158,7 +169,7 @@ namespace DynaDict
 
             m_dbConnection.Open();
 
-            SQLiteCommand command = new SQLiteCommand("select DictName from DictList", m_dbConnection);
+            SqliteCommand command = new SqliteCommand("select DictName from DictList", m_dbConnection);
 
             using (var reader = command.ExecuteReader())
             {

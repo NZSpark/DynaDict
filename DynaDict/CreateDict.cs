@@ -54,6 +54,7 @@ namespace DynaDict
                 ddm.UpdateDictWord();
                 DatabaseManager dm = new DatabaseManager();
                 dm.StoreDictToDB(ddm);
+                Toast.MakeText(view.Context, "Dictionary is created!", ToastLength.Long).Show();
             };
 
             // Use this to return your custom view for this Fragment

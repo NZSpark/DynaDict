@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using System.IO;
 using Environment = System.Environment;
+using SQLitePCL;
 
 namespace DynaDict
 {
@@ -80,7 +81,11 @@ namespace DynaDict
       
             //insert DictList
             SqliteCommand command = new SqliteCommand("insert into DictList (DictName,DictDescription) values ('" + ddm.sDictName + "','" + ddm.sDictDescription +  "')", m_dbConnection);
-            sDictID = command.ExecuteNonQuery().ToString();
+            command.ExecuteNonQuery().ToString();
+
+            command.CommandText = "select last_insert_rowid()";
+            sDictID = ((Int64)command.ExecuteScalar()).ToString();
+
 
             //insert URLList
             for (int i = 0; i < ddm.sSourceLinks.Count; i++)
@@ -112,7 +117,10 @@ namespace DynaDict
                     + ddm.DictWordList[i].sPhonics.Replace("'", "''") + "','" 
                     + sC.Replace("'", "''") + "','" 
                     + sE.Replace("'", "''") + "')";
-                sWordID = command.ExecuteNonQuery().ToString();
+                command.ExecuteNonQuery().ToString();
+
+                command.CommandText = "select last_insert_rowid()";
+                sWordID = ((Int64)command.ExecuteScalar()).ToString();
 
                 command.CommandText = "insert into DictWord (WordID,DictID) values ('" + sWordID + "','" + sDictID + "')";
                 command.ExecuteNonQuery();

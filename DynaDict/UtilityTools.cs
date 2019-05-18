@@ -33,6 +33,7 @@ namespace DynaDict
             {
                 DatabaseManager dbm = new DatabaseManager();
                 dbm.InitializeDB();
+                Toast.MakeText(view.Context,"Database is initialized!", ToastLength.Short).Show();
             };
 
             // Use this to return your custom view for this Fragment

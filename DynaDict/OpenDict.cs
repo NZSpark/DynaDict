@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Environment = System.Environment;
 
 namespace DynaDict
 {
@@ -41,12 +42,12 @@ namespace DynaDict
             {
                 tvWordName.Text = ddm.DictWordList[0].sVocabulary;
                 tvPhonics.Text = ddm.DictWordList[0].sPhonics;
-                tvChineseDefinition.Text = ddm.DictWordList[0].sChineseDefinition.ToString();
-                tvEnglishDefinition.Text = ddm.DictWordList[0].sEnglishDefinition.ToString();
-                tvSentences.Text = ddm.DictWordList[0].sSentences.ToString();
+                tvChineseDefinition.Text = string.Join(Environment.NewLine,ddm.DictWordList[0].sChineseDefinition.ToArray());
+                tvEnglishDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[0].sEnglishDefinition.ToArray());
+                tvSentences.Text = string.Join(Environment.NewLine, ddm.DictWordList[0].sSentences.ToArray());
             }
 
-            return inflater.Inflate(Resource.Layout.fragment_opendicts, container, false); 
+            return view; 
 
             //return base.OnCreateView(inflater, container, savedInstanceState);
         }

@@ -170,9 +170,21 @@ namespace DynaDict
                         
             SqliteCommand command = new SqliteCommand("select * from DictList where DictName = '" + DictName + "'" , m_dbConnection);
 
+            /*
             using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
+                {
+                    sDictID = reader["DictID"].ToString();
+                    ddm.sDictDescription = reader["DictDescription"].ToString();
+                    Console.WriteLine(sDictID + ":" + ddm.sDictDescription);
+                }
+            }
+            */
+
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
                 {
                     sDictID = reader["DictID"].ToString();
                     ddm.sDictDescription = reader["DictDescription"].ToString();
@@ -185,7 +197,7 @@ namespace DynaDict
             {
                 while (reader.Read())
                 {
-                    ddm.sSourceLinks.Append(reader["URL"].ToString());
+                    ddm.sSourceLinks.Add(reader["URL"].ToString());
                     Console.WriteLine(reader["URL"].ToString());
                 }
             }
@@ -203,7 +215,7 @@ namespace DynaDict
                     vdm.sChineseDefinition = new List<string>(reader["ChineseDefinition"].ToString().Split(new char [] { '\n' }));
                     */
                     VocabularyDataModel vdm = JsonConvert.DeserializeObject<VocabularyDataModel>(reader["WordObject"].ToString());
-                    ddm.DictWordList.Append(vdm);                    
+                    ddm.DictWordList.Add(vdm);                    
                 }
             }
 
@@ -211,9 +223,9 @@ namespace DynaDict
             return ddm;
         }
 
-        public string [] GetDictNameList()
+        public List<string> GetDictNameList()
         {
-            string[] dictNameList = { };
+            List <string> dictNameList = new List<string>();
 
             m_dbConnection.Open();
 
@@ -223,7 +235,7 @@ namespace DynaDict
             {
                 while (reader.Read())
                 {
-                    dictNameList.Append(reader["DictName"].ToString());
+                    dictNameList.Add(reader["DictName"].ToString());
                 }
             }
 

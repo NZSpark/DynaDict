@@ -134,13 +134,6 @@ namespace DynaDict
         public List<string> sChineseDefinition = new List<string>();
         public List<string> sSentences = new List<string>();
 
-        public string GetDefinition(string sWord)
-        {
-            string sDefinition = "";
-
-            return sDefinition;
-        }
-
         //http://www.dict.cn/embryo
         public bool ExtractDefinitionFromDicCN(string sWord)
         {
@@ -176,7 +169,7 @@ namespace DynaDict
                 }
             }
 
-            //extrict Chinese definition
+            //extrict English definition
             List<HtmlNode> divENList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout en"))).ToList();
             if (divENList.Count > 0)
             {

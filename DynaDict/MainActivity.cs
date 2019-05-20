@@ -82,7 +82,7 @@ namespace DynaDict
             }
             else if (id == Resource.Id.menu_dictlist)
             {
-                fragment = new OpenDict();
+                fragment = new DictList();
             }
             else if (id == Resource.Id.menu_opendicts)
             {

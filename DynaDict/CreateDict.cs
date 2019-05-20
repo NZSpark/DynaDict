@@ -26,7 +26,7 @@ namespace DynaDict
         {
             var view = inflater.Inflate(Resource.Layout.fragment_createdict, container, false); 
 
-            EditText etDictName =(EditText)view.FindViewById(Resource.Id.etDictName);
+            EditText etDictName = view.FindViewById<EditText>(Resource.Id.etDictName);
             EditText etURL = view.FindViewById<EditText>(Resource.Id.etURL);
             EditText etURLList = view.FindViewById<EditText>(Resource.Id.etURLList);
             Button btAdd = view.FindViewById<Button>(Resource.Id.btAdd);

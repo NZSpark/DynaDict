@@ -14,11 +14,13 @@ using Android.Widget;
 using System.IO;
 using Environment = System.Environment;
 using SQLitePCL;
+using Newtonsoft.Json;
 
 namespace DynaDict
 {
     class DatabaseManager
     {
+        //path must be absolute path with FileName.
         private static string DatabaseFileName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/DynaDict.Sqlite.db";
         //private const string DatabaseSource = "data source=" + DatabaseFileName + ";Version=3;";
         private static string DatabaseSource = "Filename=" + DatabaseFileName; //Filename = -> relative path; Data Source= -> absolute path.
@@ -45,6 +47,7 @@ namespace DynaDict
                 "URL TEXT)";
             command.ExecuteNonQuery();
 
+            /*
             command.CommandText =
                 "CREATE TABLE Vocabulary (" +
                 "WordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -52,6 +55,12 @@ namespace DynaDict
                 "Phonics TEXT," +
                 "ChineseDefinition TEXT," +
                 "EnglishDefinition TEXT)";
+            */
+            command.CommandText =
+                "CREATE TABLE Vocabulary (" +
+                "WordID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "WordName TEXT," +
+                "WordObject TEXT)"; //the class VocabularyDataModel object will be stored as a JSON string.
             command.ExecuteNonQuery();
 
 
@@ -72,6 +81,21 @@ namespace DynaDict
             fs.Close();
         }
 
+        public VocabularyDataModel GetWordDefinition(string sWord)
+        {
+            m_dbConnection.Open();
+
+            SqliteCommand command = new SqliteCommand("select WordObject from Vocabulary where WordName = '" + sWord + "'", m_dbConnection);
+            var reader = command.ExecuteScalar(); //ExecuteScalar returns the first column of the first row;
+            m_dbConnection.Close();
+
+            if (reader == null)
+                return null;
+
+            VocabularyDataModel vdm = JsonConvert.DeserializeObject<VocabularyDataModel>(reader.ToString());
+
+            return vdm;
+        }
 
         public void StoreDictToDB(DictDataModel ddm)
         {
@@ -99,6 +123,8 @@ namespace DynaDict
             {
 
                 string sWordID = "";
+
+                /*
                 string sE = "";
                 string sC = "";
 
@@ -111,12 +137,18 @@ namespace DynaDict
                 {
                     sE = sE + ddm.DictWordList[i].sEnglishDefinition[j] + "\n";
                 }
+                
 
                 command.CommandText = "insert into Vocabulary (WordName,Phonics,ChineseDefinition,EnglishDefinition) values ('" 
                     + ddm.DictWordList[i].sVocabulary + "','" 
                     + ddm.DictWordList[i].sPhonics.Replace("'", "''") + "','" 
                     + sC.Replace("'", "''") + "','" 
                     + sE.Replace("'", "''") + "')";
+                */
+                string sWordObject = JsonConvert.SerializeObject(ddm.DictWordList[i]);
+                command.CommandText = "insert into Vocabulary (WordName,WordObject) values ('"
+                    + ddm.DictWordList[i].sVocabulary + "','"
+                    + sWordObject.Replace("'", "''") + "')";
                 command.ExecuteNonQuery().ToString();
 
                 command.CommandText = "select last_insert_rowid()";
@@ -163,11 +195,14 @@ namespace DynaDict
             {
                 while (reader.Read())
                 {
+                    /*
                     VocabularyDataModel vdm = new VocabularyDataModel();
                     vdm.sVocabulary = reader["WordName"].ToString();
                     vdm.sPhonics = reader["Phonics"].ToString();
                     vdm.sEnglishDefinition = new List<string> (reader["EnglishDefinition"].ToString().Split(new char [] { '\n' }));
                     vdm.sChineseDefinition = new List<string>(reader["ChineseDefinition"].ToString().Split(new char [] { '\n' }));
+                    */
+                    VocabularyDataModel vdm = JsonConvert.DeserializeObject<VocabularyDataModel>(reader["WordObject"].ToString());
                     ddm.DictWordList.Append(vdm);                    
                 }
             }

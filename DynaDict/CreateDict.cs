@@ -29,6 +29,7 @@ namespace DynaDict
             EditText etDictName = view.FindViewById<EditText>(Resource.Id.etDictName);
             EditText etURL = view.FindViewById<EditText>(Resource.Id.etURL);
             EditText etURLList = view.FindViewById<EditText>(Resource.Id.etURLList);
+            TextView tvResult = view.FindViewById<TextView>(Resource.Id.tvResult);
             Button btAdd = view.FindViewById<Button>(Resource.Id.btAdd);
             Button btCreate = view.FindViewById<Button>(Resource.Id.btCreate);
             btAdd.Click += delegate
@@ -38,23 +39,32 @@ namespace DynaDict
 
             btCreate.Click += delegate
             {
-                DictDataModel ddm = new DictDataModel();
-
+                btCreate.Enabled = false;
+                DatabaseManager dm = new DatabaseManager();
+                dm.SetDefaultValue("DictName", etDictName.Text);
+                DictDataModel ddm = dm.GetDictFromDBByName(etDictName.Text);
+                if (ddm is null)
+                {
+                    ddm = new DictDataModel();
+                    ddm.sDictName = etDictName.Text;
+                }
                 //only for test.
-                etURLList.Text = "http://localhost:8080";
+                //etURLList.Text = "http://localhost:8080";
 
-                foreach (string s in etURLList.Text.Split("\r\n"))
+                    foreach (string s in etURLList.Text.Split("\r\n"))
                 {
                     if (!s.Equals(""))
                     {
-                        ddm.sSourceLinks.Add(s);
+                        if(!ddm.sSourceLinks.Contains(s))
+                            ddm.sSourceLinks.Add(s);
                     }
                 }
-                ddm.sDictName = etDictName.Text;
+
                 ddm.UpdateDictWord();
-                DatabaseManager dm = new DatabaseManager();
                 dm.StoreDictToDB(ddm);
+                tvResult.Text = "Dictionary: " + ddm.sDictName + " is created. Total " + ddm.DictWordList.Count + " words added.";
                 Toast.MakeText(view.Context, "Dictionary is created!", ToastLength.Long).Show();
+                btCreate.Enabled = true;
             };
 
             // Use this to return your custom view for this Fragment

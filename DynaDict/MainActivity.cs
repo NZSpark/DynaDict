@@ -32,6 +32,10 @@ namespace DynaDict
 
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
+
+            //show a default dictionary.
+            Fragment fragment = new OpenDict();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
         }
 
         public override void OnBackPressed()

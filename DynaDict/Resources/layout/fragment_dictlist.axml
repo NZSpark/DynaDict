@@ -5,14 +5,38 @@
     tools:context="com.chrisrisner.fragmentsample.FragmentOne">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="List dictionary!" />
-    <Button
-            android:text="Create"
+            
+        <RadioGroup
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rgDictList">
+        </RadioGroup>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btCreate" />
+            android:id="@+id/tvHint"
+            android:text="" />  
+        
+            <Button
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btDelete" />   
+    </LinearLayout> 
+
 
 </FrameLayout>

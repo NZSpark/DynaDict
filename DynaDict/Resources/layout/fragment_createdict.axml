@@ -25,10 +25,10 @@
 				android:layout_height="wrap_content"
 				android:text="Dict Name:" />
 			<EditText
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/etDictName"
-				android:text="SecurityMDS" />
+				android:text="test" />
 		</LinearLayout >
 		<LinearLayout
 		android:orientation="horizontal"
@@ -42,9 +42,10 @@
 				android:layout_height="wrap_content"
 				android:text="URL:" />
 			<EditText
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/etURL" />
+				android:id="@+id/etURL" 
+                android:text="http://m.dict.cn"/>
 		</LinearLayout >
 		<Button
 			android:text="Add"
@@ -52,7 +53,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/btAdd" />
 		<TextView
-			android:text="Medium Text"
+			android:text="URL List"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -67,6 +68,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/btCreate" />
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvResult" />
 	</LinearLayout >
 
 </FrameLayout>

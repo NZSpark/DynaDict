@@ -26,12 +26,20 @@ namespace DynaDict
         //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
         public VocabularyDataModel LookupWordLocal(string sWord)
         {
-            foreach(var v in DictWordList)
+            VocabularyDataModel vdm = null;
+            //lookup in dictionary.
+            foreach (var v in DictWordList)
             {
                 if (v.sVocabulary.Equals(sWord))
                     return v;
             }
-            return null;
+            //lookup in whole database.
+            DatabaseManager dm = new DatabaseManager();
+            vdm = dm.GetWordDefinition(sWord);
+            if (vdm is null)
+                return null;
+            DictWordList.Add(vdm);
+            return vdm;
         }
 
         public VocabularyDataModel LookupWordOnline(string sWord)
@@ -45,19 +53,29 @@ namespace DynaDict
 
         public void UpdateDictWord()
         {
-            if(sSourceLinks.Count >0)
+
+            List<string> passList = new List<string>();
+            DatabaseManager dm = new DatabaseManager();
+            //meaningless words should be passed.
+            passList.AddRange(dm.GetWordListByDictName("Trash"));
+            //familiar words should be passed.
+            passList.AddRange(dm.GetWordListByDictName("PassDict"));
+
+            if (sSourceLinks.Count >0)
             {
                 foreach(var s in sSourceLinks)
                 {
                     //get all words in a url
-                    //List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
-                    List<string> tmpWordList = new List<string> { "hello", "world" };
-
+                    List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
+                    //List<string> tmpWordList = new List<string> { "hello", "world" }; //test www search
+                    //List<string> tmpWordList = new List<string> { "join" };           //test mobile search
                     if (tmpWordList is null)
                         continue;
 
                     foreach (var v in tmpWordList)
                     {
+                        if (passList.Contains(v))
+                            continue;
                         //add word into dictionary if it does not exist.
                         if (LookupWordLocal(v) == null)
                         {
@@ -80,6 +98,7 @@ namespace DynaDict
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sWebPageURL);
                 request.Method = "GET";
+                request.Timeout = 10000;
                 response = request.GetResponse();
                 reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 sResult = reader.ReadToEnd();
@@ -135,10 +154,11 @@ namespace DynaDict
         public List<string> sSentences = new List<string>();
 
         //http://www.dict.cn/embryo
-        public bool ExtractDefinitionFromDicCN(string sWord)
+        public bool ExtractDefinitionFromDicCNWWW(string sWord)
         {
             DictDataModel ddm = new DictDataModel();
             string sDicCNIn = ddm.LoadWebPage("http://www.dict.cn/" + sWord);
+            //string sDicCNIn = ddm.LoadWebPage("http://m.dict.cn/msearch.php?q=" + sWord);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(sDicCNIn);
 
@@ -166,6 +186,77 @@ namespace DynaDict
                 foreach (var li in liCN)
                 {
                     sChineseDefinition.Add(li.InnerText.Replace("\t",""));
+                }
+            }
+
+            //extrict English definition
+            List<HtmlNode> divENList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout en"))).ToList();
+            if (divENList.Count > 0)
+            {
+                var liEN = divENList[0].Descendants("li").ToList();
+                foreach (var li in liEN)
+                {
+                    sEnglishDefinition.Add(li.InnerText.Replace("\t", ""));
+                }
+            }
+
+            //extrict sentences
+            List<HtmlNode> divSTList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout sort"))).ToList();
+            if (divSTList.Count > 0)
+            {
+                var liST = divSTList[0].Descendants("li").ToList();
+                foreach (var li in liST)
+                {
+                    sSentences.Add(li.InnerText);
+                }
+            }
+
+            return true;
+        }
+
+        //http://m.dict.cn/msearch.php?q=embryo, Mobile
+        public bool ExtractDefinitionFromDicCN(string sWord)
+        {
+            DictDataModel ddm = new DictDataModel();
+            //string sDicCNIn = ddm.LoadWebPage("http://www.dict.cn/" + sWord);
+            string sDicCNIn = ddm.LoadWebPage("http://m.dict.cn/msearch.php?q=" + sWord);
+
+            if (sDicCNIn is null)
+                return false;
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(sDicCNIn);
+
+            sVocabulary = sWord;
+
+            //extrict phonics
+            List<HtmlNode> photicList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("phonetic"))).ToList();
+            if (photicList.Count > 0)
+            {
+                if (photicList[0].Descendants("bdo").ToList().Count > 0)
+                    sPhonics = photicList[0].Descendants("bdo").ToList()[0].InnerText;
+            }
+
+            //extrict Chinese definition
+            List<HtmlNode> divCNList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout basic"))).ToList();
+            if (divCNList.Count > 0)
+            {
+                if (divCNList[0].Descendants("li").ToList().Count > 0)
+                    sChineseDefinition.Add(divCNList[0].Descendants("li").ToList()[0].InnerText.Replace("\t", ""));
+            }
+            else
+            {
+                DatabaseManager dm = new DatabaseManager();
+                dm.SaveWordToDict("Trash", this);
+                return false;
+            }
+            divCNList = doc.DocumentNode.Descendants().Where(x => (x.Name == "div" && x.Attributes["class"] != null && x.Attributes["class"].Value.Contains("layout dual"))).ToList();
+            if (divCNList.Count > 0)
+            {
+                var liCN = divCNList[0].Descendants("li").ToList();
+                foreach (var li in liCN)
+                {
+                    sChineseDefinition.Add(li.InnerText.Replace("\t", ""));
                 }
             }
 

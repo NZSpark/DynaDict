@@ -38,6 +38,9 @@ namespace DynaDict
             CheckBox cbOnline = view.FindViewById<CheckBox>(Resource.Id.cbOnline);
 
             Button btLookupLocal = view.FindViewById<Button>(Resource.Id.btLookupLocal);
+            Button btDeleteWord = view.FindViewById<Button>(Resource.Id.btDeleteWord);
+            btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
+            DatabaseManager dm = new DatabaseManager();
 
             //trigger lookup action when hit on Enter key.
             etWordToLookup.KeyPress += (s, e) =>
@@ -54,7 +57,7 @@ namespace DynaDict
             {
                 if (etWordToLookup.Text.Equals(""))
                     return;
-                DatabaseManager dm = new DatabaseManager();
+
                 VocabularyDataModel vdm = dm.GetWordDefinition(etWordToLookup.Text);
                 if(vdm is null)
                     if(cbOnline.Checked)
@@ -62,9 +65,19 @@ namespace DynaDict
                         DictDataModel ddm = new DictDataModel();
                         vdm = ddm.LookupWordOnline(etWordToLookup.Text);
                         if (vdm is null)
+                        {
+                            btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
+                            tvWordName.Text = "No such word. Does it spell right?";
                             return;
+                        }
                         dm.SaveWordToDict("NewWord", vdm);
                     }
+                    else {
+                        btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
+                        tvWordName.Text = "It's a new word. Please select Online checkbox. ";
+                        return;
+                    }
+                btDeleteWord.Visibility = Android.Views.ViewStates.Visible;
                 tvWordName.Text = vdm.sVocabulary;
                 tvPhonics.Text = vdm.sPhonics;
                 tvChineseDefinition.Text = string.Join(Environment.NewLine, vdm.sChineseDefinition.ToArray());
@@ -73,6 +86,19 @@ namespace DynaDict
                 //hide keyboard.
                 InputMethodManager imm = (InputMethodManager)view.Context.GetSystemService(Context.InputMethodService);
                 imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.NotAlways);
+            };
+
+            btDeleteWord.Click += delegate 
+            {
+                dm.RemoveWordFromAllDict(tvWordName.Text);
+
+                btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
+                tvWordName.Text = "";
+                tvPhonics.Text = "";
+                tvChineseDefinition.Text = "";
+                tvEnglishDefinition.Text = "";
+                tvSentences.Text = "";
+
             };
             return view;
         }

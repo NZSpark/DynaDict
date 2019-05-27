@@ -118,6 +118,7 @@ namespace DynaDict
                 return "0";
             return reader1.ToString();
         }
+
         public void RemoveDictByName(string sDictName)
         {
             command.CommandText = "select DictID from DictList where DictName = '" + sDictName + "'";
@@ -153,6 +154,18 @@ namespace DynaDict
                 command.ExecuteNonQuery();
             }
 
+        }
+
+        public void RemoveWordFromAllDict(string sWord)
+        {
+            string sWordID = GetWordID(sWord);
+            if (!sWord.Equals(""))
+            {
+                command.CommandText = "delete from DictWord where WordID ='" + sWordID + "'";
+                command.ExecuteNonQuery();
+                command.CommandText = "delete from Vocabulary where WordID ='" + sWordID + "'";
+                command.ExecuteNonQuery();
+            }
         }
 
         public List<string> GetWordListByDictName(string sDictName)

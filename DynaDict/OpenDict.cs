@@ -74,21 +74,53 @@ namespace DynaDict
             TextView tvOpenDictDictName = view.FindViewById<TextView>(Resource.Id.tvOpenDictDictName);
             DatabaseManager dm = new DatabaseManager();
             string sDictName = dm.GetDefaultValueByKey("DictName");
-            if (sDictName.Equals("")) return view;
-            tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", " + dm.GetTotalWordsNumberByDictName(sDictName) + " words.";
+            if (sDictName.Equals(""))
+            {
+                tvOpenDictDictName.Text = "Please select a Dictionary first in DictList menu.";
+                /*
+                tvWordName.Text = "";
+                tvPhonics.Text = "";
+                tvChineseDefinition.Text = "";
+                tvEnglishDefinition.Text = "";
+                tvSentences.Text = "";
+                */
+                btDelete.Visibility = Android.Views.ViewStates.Invisible;
+                btPass.Visibility = Android.Views.ViewStates.Invisible;
+                return view;
+            }
+            string sDictCount = dm.GetTotalWordsNumberByDictName(sDictName);
+            tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", " + sDictCount + " words.";
+            //no more words in dictionary.
+            if ( sDictCount.Equals("0"))
+            {
+                //btDelete.Enabled = false;
+                //btPass.Enabled = false;
+                btDelete.Visibility = Android.Views.ViewStates.Invisible;
+                btPass.Visibility = Android.Views.ViewStates.Invisible;
+                return view;
+            }
+
             DictDataModel ddm = dm.GetDictFromDBByName(sDictName);
-            if (ddm is null)
+            if (ddm is null) 
             {
                 tvWordName.Text = "There is no dictionary. Please create one first!";
                 return view;
             }
-
 
             btDelete.Click += delegate
             {
                 dm.SaveWordToDict("Trash", ddm.DictWordList[_CurrentWordID]);
                 dm.RemoveWordFromDict(ddm.sDictName, ddm.DictWordList[_CurrentWordID].sVocabulary);
                 ddm.DictWordList.Remove(ddm.DictWordList[_CurrentWordID]);
+
+                //no more words in dictionary.
+                if (ddm.DictWordList.Count == 0)
+                {
+                    btDelete.Enabled = false;
+                    btPass.Enabled = false;
+                    return;
+                }
+
                 if (_CurrentWordID == ddm.DictWordList.Count)
                     _CurrentWordID = 0;
                 ResetControlText(ddm.DictWordList[_CurrentWordID]);
@@ -100,6 +132,15 @@ namespace DynaDict
                 dm.SaveWordToDict("PassDict", ddm.DictWordList[_CurrentWordID]);
                 dm.RemoveWordFromDict(ddm.sDictName, ddm.DictWordList[_CurrentWordID].sVocabulary);
                 ddm.DictWordList.Remove(ddm.DictWordList[_CurrentWordID]);
+
+                //no more words in dictionary.
+                if (ddm.DictWordList.Count == 0)
+                {
+                    btDelete.Enabled = false;
+                    btPass.Enabled = false;
+                    return;
+                }
+
                 if (_CurrentWordID == ddm.DictWordList.Count)
                     _CurrentWordID = 0;
                 ResetControlText(ddm.DictWordList[_CurrentWordID]);

@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 
 namespace DynaDict
@@ -32,30 +33,43 @@ namespace DynaDict
             TextView tvResult = view.FindViewById<TextView>(Resource.Id.tvResult);
             Button btAdd = view.FindViewById<Button>(Resource.Id.btAdd);
             Button btCreate = view.FindViewById<Button>(Resource.Id.btCreate);
+
+            InputMethodManager imm = (InputMethodManager)view.Context.GetSystemService(Context.InputMethodService);
+            imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.NotAlways);
+
+            DatabaseManager dm = new DatabaseManager();
+
             btAdd.Click += delegate
             {
-                etURLList.Text += etURL.Text + "\r\n";
+                if (etURLList.Text.Contains(etURL.Text))
+                    return;
+                DictDataModel ddm = dm.GetDictFromDBByName(etDictName.Text);
+                foreach (var url in ddm.sSourceLinks)
+                {
+                    if (etURLList.Text.Contains(url) || url.Equals(etURL.Text)  ) continue;
+                    etURLList.Text += url + "\r\n";
+                }
+                etURLList.Text += etURL.Text + "\r\n";                
             };
 
             btCreate.Click += delegate
             {
-                btCreate.Enabled = false;
-                DatabaseManager dm = new DatabaseManager();
+                btCreate.Enabled = false;                
                 dm.SetDefaultValue("DictName", etDictName.Text);
                 DictDataModel ddm = dm.GetDictFromDBByName(etDictName.Text);
                 if (ddm is null)
                 {
                     ddm = new DictDataModel();
-                    ddm.sDictName = etDictName.Text;
+                    ddm.sDictName = etDictName.Text;                    
                 }
                 //only for test.
                 //etURLList.Text = "http://localhost:8080";
 
-                    foreach (string s in etURLList.Text.Split("\r\n"))
+                foreach (string s in etURLList.Text.Split("\r\n"))
                 {
                     if (!s.Equals(""))
                     {
-                        if(!ddm.sSourceLinks.Contains(s))
+                        if (!ddm.sSourceLinks.Contains(s))
                             ddm.sSourceLinks.Add(s);
                     }
                 }

@@ -34,7 +34,7 @@ namespace DynaDict
             navigationView.SetNavigationItemSelectedListener(this);
 
             //show a default dictionary.
-            Fragment fragment = new OpenDict();
+            Fragment fragment = new LooupLocal();
             FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
         }
 
@@ -83,6 +83,10 @@ namespace DynaDict
             if (id == Resource.Id.menu_createdict)
             {
                 fragment = new CreateDict();
+            }
+            else if (id == Resource.Id.menu_lookup)
+            {
+                fragment = new LooupLocal();
             }
             else if (id == Resource.Id.menu_dictlist)
             {

@@ -348,6 +348,7 @@ namespace DynaDict
                 catch(Exception e)
                 {
                     //duplicate record.
+                    System.Console.WriteLine(e.ToString());
                 }
             }
 
@@ -423,11 +424,19 @@ namespace DynaDict
 
         public string GetDefaultValueByKey(string sKey)
         {
-            command.CommandText = "select Value from DefaultValue where Key='" + sKey + "'";
-            var reader = command.ExecuteScalar();
-            if (reader == null)
+            try
+            {
+                command.CommandText = "select Value from DefaultValue where Key='" + sKey + "'";
+                var reader = command.ExecuteScalar();
+                if (reader == null)
+                    return "";
+                return reader.ToString();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.ToString());
                 return "";
-            return reader.ToString();
+            }
         }
 
         public void SetDefaultValue(string sKey,string sValue)

@@ -33,27 +33,27 @@
 			android:id = "@+id/tvWordName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="WordName!" />
+			/>
 		<TextView
 			android:id = "@+id/tvPhonics"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Phonics!" />
+			 />
 		<TextView
 			android:id = "@+id/tvChineseDefinition"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="ChineseDefinition!" />
+			 />
 		<TextView
 			android:id = "@+id/tvEnglishDefinition"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="EnglishDefinition!" />
+			/>
 		<TextView
 			android:id = "@+id/tvSentences"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Sentences!" />
+			 />
 	</LinearLayout>
 
 

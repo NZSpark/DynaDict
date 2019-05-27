@@ -42,6 +42,11 @@ namespace DynaDict
                 {
                     if (rgDictList.GetChildAt(i).Id == iSelectedID)
                     {
+                        if (!sDictName.Equals(""))
+                        {                            
+                            dm.RemoveDictByName(sDictName);
+                            dm.SetDefaultValue("DictName", "");
+                        }
                         rgDictList.RemoveViewAt(i);
                         break;
                     }
@@ -51,6 +56,7 @@ namespace DynaDict
                 DictDataModel ddm = dm.GetDictFromDBByName(sDictName);
 
             };
+            btDelete.Enabled = false;
 
             List<string> dictList = dm.GetDictNameList();
 

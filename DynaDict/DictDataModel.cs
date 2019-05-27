@@ -103,10 +103,10 @@ namespace DynaDict
                 reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 sResult = reader.ReadToEnd();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 // handle error
-                System.Console.WriteLine(ex.ToString());
+                System.Console.WriteLine(e.ToString());
             }
             finally
             {

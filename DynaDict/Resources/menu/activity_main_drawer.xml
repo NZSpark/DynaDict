@@ -4,6 +4,10 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+      <item
+            android:id="@+id/menu_lookup"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Lookup" />
         <item
             android:id="@+id/menu_createdict"
             android:icon="@drawable/ic_menu_camera"

@@ -25,6 +25,7 @@
 				android:layout_height="wrap_content"
 				android:text="Dict Name:" />
 			<EditText
+                android:minWidth="190px"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/etDictName"
@@ -42,6 +43,7 @@
 				android:layout_height="wrap_content"
 				android:text="URL:" />
 			<EditText
+                android:minWidth="250px"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/etURL" 
@@ -59,6 +61,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/textView1" />
 		<EditText
+            android:minWidth="300px"
 			android:inputType="textMultiLine"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

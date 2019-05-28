@@ -11,6 +11,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Environment = System.Environment;
+using Android.Support.V7.Widget;
 
 namespace DynaDict
 {
@@ -18,6 +19,9 @@ namespace DynaDict
     {
         private float _viewX;
         private int _CurrentWordID = 0;
+        private string _targetDictName = "PassDict";
+
+        DatabaseManager dm = new DatabaseManager();
 
         Button btDelete;
         Button btPass;
@@ -53,6 +57,7 @@ namespace DynaDict
             tvEnglishDefinition.Text = string.Join(Environment.NewLine, vdm.sEnglishDefinition.ToArray());
             tvSentences.Text = string.Join(Environment.NewLine, vdm.sSentences.ToArray());
 
+
             return;
         }
 
@@ -62,17 +67,25 @@ namespace DynaDict
 
             var view = inflater.Inflate(Resource.Layout.fragment_opendicts, container, false);
 
-             btDelete = view.FindViewById<Button>(Resource.Id.btOpenDictDelete);
-             btPass = view.FindViewById<Button>(Resource.Id.btOpenDictPass);
+            btDelete = view.FindViewById<Button>(Resource.Id.btOpenDictDelete);
+            btPass = view.FindViewById<Button>(Resource.Id.btOpenDictPass);
 
-             tvWordName = view.FindViewById<TextView>(Resource.Id.tvWordName);
-             tvPhonics = view.FindViewById<TextView>(Resource.Id.tvPhonics);
-             tvChineseDefinition = view.FindViewById<TextView>(Resource.Id.tvChineseDefinition);
-             tvEnglishDefinition = view.FindViewById<TextView>(Resource.Id.tvEnglishDefinition);
-             tvSentences = view.FindViewById<TextView>(Resource.Id.tvSentences);
-
+            tvWordName = view.FindViewById<TextView>(Resource.Id.tvWordName);
+            tvPhonics = view.FindViewById<TextView>(Resource.Id.tvPhonics);
+            tvChineseDefinition = view.FindViewById<TextView>(Resource.Id.tvChineseDefinition);
+            tvEnglishDefinition = view.FindViewById<TextView>(Resource.Id.tvEnglishDefinition);
+            tvSentences = view.FindViewById<TextView>(Resource.Id.tvSentences);
             TextView tvOpenDictDictName = view.FindViewById<TextView>(Resource.Id.tvOpenDictDictName);
-            DatabaseManager dm = new DatabaseManager();
+
+            //LinearLayout llContainer = view.FindViewById<LinearLayout>(Resource.Id.llContainer);
+            Spinner spDictList = view.FindViewById<Spinner>(Resource.Id.spDictList);
+
+            //ArrayAdapter<string> arrayAdapter = new ArrayAdapter<string>( this.Context, Android.Resource.Layout.SimpleSpinnerDropDownItem, dm.GetDictNameList());
+            ArrayAdapter<string> arrayAdapter = new ArrayAdapter<string>(this.Context, Android.Resource.Layout.SimpleSpinnerDropDownItem, dm.GetDictNameList());
+
+            spDictList.Adapter = arrayAdapter;
+            spDictList.SetSelection(arrayAdapter.GetPosition("PassDict"));
+
             string sDictName = dm.GetDefaultValueByKey("DictName");
             if (sDictName.Equals(""))
             {
@@ -88,6 +101,7 @@ namespace DynaDict
                 btPass.Visibility = Android.Views.ViewStates.Invisible;
                 return view;
             }
+
             string sDictCount = dm.GetTotalWordsNumberByDictName(sDictName);
             tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", " + sDictCount + " words.";
             //no more words in dictionary.
@@ -107,6 +121,27 @@ namespace DynaDict
                 return view;
             }
 
+            if (ddm.DictWordList.Count > 0)
+            {
+                _CurrentWordID = 0;
+
+
+                ResetControlText(ddm.DictWordList[_CurrentWordID]);
+                /*
+                tvWordName.Text = ddm.DictWordList[_CurrentWordID].sVocabulary;
+                tvPhonics.Text = ddm.DictWordList[_CurrentWordID].sPhonics;
+                tvChineseDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sChineseDefinition.ToArray());
+                tvEnglishDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sEnglishDefinition.ToArray());
+                tvSentences.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sSentences.ToArray());
+                */
+
+            }
+
+
+            spDictList.ItemSelected += delegate {
+                _targetDictName = spDictList.SelectedItem.ToString();
+            };
+
             btDelete.Click += delegate
             {
                 dm.SaveWordToDict("Trash", ddm.DictWordList[_CurrentWordID]);
@@ -116,6 +151,7 @@ namespace DynaDict
                 //no more words in dictionary.
                 if (ddm.DictWordList.Count == 0)
                 {
+                    tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", 0 words.";
                     btDelete.Enabled = false;
                     btPass.Enabled = false;
                     return;
@@ -128,14 +164,15 @@ namespace DynaDict
 
             btPass.Click += delegate
             {
-                if (ddm.sDictName.Equals("PassDict")) return; //To move to itself is forbidden.
-                dm.SaveWordToDict("PassDict", ddm.DictWordList[_CurrentWordID]);
+                if (ddm.sDictName.Equals(_targetDictName)) return; //To move to itself is forbidden.
+                dm.SaveWordToDict(_targetDictName, ddm.DictWordList[_CurrentWordID]);
                 dm.RemoveWordFromDict(ddm.sDictName, ddm.DictWordList[_CurrentWordID].sVocabulary);
                 ddm.DictWordList.Remove(ddm.DictWordList[_CurrentWordID]);
 
                 //no more words in dictionary.
                 if (ddm.DictWordList.Count == 0)
                 {
+                    tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", 0 words.";
                     btDelete.Enabled = false;
                     btPass.Enabled = false;
                     return;
@@ -158,14 +195,14 @@ namespace DynaDict
                         break;
                     case MotionEventActions.Up:
                         var left = (int)(_viewX - e.Event.GetX() );
-                        if (left > 250)
+                        if (left > 100)
                         {
                             _CurrentWordID++;
                             if (_CurrentWordID == ddm.DictWordList.Count)
                                 _CurrentWordID = 0;
 
                         }
-                        if (left < -250)
+                        if (left < -100)
                         {
                             _CurrentWordID--;
                             if (_CurrentWordID < 0)
@@ -180,7 +217,8 @@ namespace DynaDict
                         tvEnglishDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sEnglishDefinition.ToArray());
                         tvSentences.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sSentences.ToArray());
                         */
-                        ResetControlText(ddm.DictWordList[_CurrentWordID]);
+                        if(ddm.DictWordList.Count > 0)
+                            ResetControlText(ddm.DictWordList[_CurrentWordID]);
 
                         handled = true;
                         break;
@@ -205,21 +243,7 @@ namespace DynaDict
             };
 
 
-            if (ddm.DictWordList.Count > 0)
-            {
-                _CurrentWordID = 0;
 
-
-                ResetControlText(ddm.DictWordList[_CurrentWordID]);
-                /*
-                tvWordName.Text = ddm.DictWordList[_CurrentWordID].sVocabulary;
-                tvPhonics.Text = ddm.DictWordList[_CurrentWordID].sPhonics;
-                tvChineseDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sChineseDefinition.ToArray());
-                tvEnglishDefinition.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sEnglishDefinition.ToArray());
-                tvSentences.Text = string.Join(Environment.NewLine, ddm.DictWordList[_CurrentWordID].sSentences.ToArray());
-                */
-                               
-            }
 
             return view; 
 

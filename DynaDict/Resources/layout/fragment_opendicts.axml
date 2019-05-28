@@ -9,26 +9,36 @@
 		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-        <TextView
-            android:id = "@+id/tvOpenDictDictName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-         />
-        <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-		<Button
-			android:text="Trash"
+		<TextView
+			android:id = "@+id/tvOpenDictDictName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/btOpenDictDelete" />
-		<Button
-			android:text="Normal"
-			android:layout_width="match_parent"
+         />
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/btOpenDictPass" />
-            </LinearLayout>
+			android:id="@+id/llContainer">
+			<Button
+				android:text="Trash"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/btOpenDictDelete" />
+			<Button
+				android:text="MoveTo"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/btOpenDictPass" />
+			<Spinner
+				android:id="@+id/spDictList"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:spinnerMode="dropdown"
+                android:tooltipText="PassDict"/>
+		</LinearLayout>
+
+
 		<TextView
 			android:id = "@+id/tvWordName"
 			android:layout_width="wrap_content"

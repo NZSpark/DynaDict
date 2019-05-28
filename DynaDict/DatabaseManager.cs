@@ -231,9 +231,13 @@ namespace DynaDict
 
             if (!sWordID.Equals(""))
             {
-                command.CommandText = "insert into DictWord (WordID,DictID) values ('" + sWordID + "','" + sDictID + "')";
-                command.ExecuteNonQuery();
-
+                command.CommandText = "select WordID from DictWord where WordID ='" + sWordID + "' and DictID = '" + sDictID + "'";
+                reader = command.ExecuteScalar();
+                if (reader is null)
+                { 
+                    command.CommandText = "insert into DictWord (WordID,DictID) values ('" + sWordID + "','" + sDictID + "')";
+                    command.ExecuteNonQuery();
+                }
                 return true;
             }
             return false;

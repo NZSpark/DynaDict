@@ -52,17 +52,22 @@ namespace DynaDict
 
             btAdd.Click += delegate
             {
+                imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.NotAlways);
+
                 if (etURLList.Text.Contains(etURL.Text))
                     return;
                 DictDataModel ddm = dm.GetDictFromDBByName(etDictName.Text);
-                if(ddm != null)
+                if (ddm != null)
                     foreach (var url in ddm.sSourceLinks)
                     {
-                        if (etURLList.Text.Contains(url) || url.Equals(etURL.Text)  ) continue;
+                        if (etURLList.Text.Contains(url) || url.Equals(etURL.Text)) continue;
                         etURLList.Text += url + "\r\n";
                     }
                 if (!etURLList.Text.Contains(etURL.Text))
-                    etURLList.Text += etURL.Text + "\r\n";                
+                    etURLList.Text += etURL.Text + "\r\n";
+                //hide keyboard.
+
+                
             };
 
             btCreate.Click += delegate

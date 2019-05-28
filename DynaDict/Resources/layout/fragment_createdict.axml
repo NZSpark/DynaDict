@@ -51,6 +51,7 @@
 		</LinearLayout >
 		<Button
 			android:text="Add"
+			android:textAppearance="?android:textAppearanceSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/btAdd" />
@@ -68,6 +69,7 @@
 			android:id="@+id/etURLList" />
 		<Button
 			android:text="Create"
+			android:textAppearance="?android:textAppearanceSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/btCreate" />

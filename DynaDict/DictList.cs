@@ -30,6 +30,9 @@ namespace DynaDict
 
             Button btDelete = view.FindViewById<Button>(Resource.Id.btDelete);
             Button btOpenDict = view.FindViewById<Button>(Resource.Id.btOpenDict);
+            Button btRefresh = view.FindViewById<Button>(Resource.Id.btRefresh);
+            Button btRecreate = view.FindViewById<Button>(Resource.Id.btRecreate);
+            //btDelete.Enabled = false;
 
             RadioGroup rgDictList = view.FindViewById<RadioGroup>(Resource.Id.rgDictList);
 
@@ -38,33 +41,6 @@ namespace DynaDict
             DatabaseManager dm = new DatabaseManager();
             string sDictName = dm.GetDefaultValueByKey("DictName");
 
-            btOpenDict.Click += delegate
-            {
-                Fragment fragment = new OpenDict();
-                FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
-            };
-                //delete dictionary. name can be set manually
-                btDelete.Click += delegate
-            {
-                for(int i = 0;i<rgDictList.ChildCount;i++)
-                {
-                    if (rgDictList.GetChildAt(i).Id == iSelectedID)
-                    {
-                        if (!sDictName.Equals(""))
-                        {                            
-                            dm.RemoveDictByName(sDictName);
-                            dm.SetDefaultValue("DictName", "");
-                        }
-                        rgDictList.RemoveViewAt(i);
-                        break;
-                    }
-                }
-                btDelete.Enabled = false;
-                dm.RemoveDictByName(sDictName);
-                DictDataModel ddm = dm.GetDictFromDBByName(sDictName);
-
-            };
-            btDelete.Enabled = false;
 
             List<string> dictList = dm.GetDictNameList();
 
@@ -80,6 +56,7 @@ namespace DynaDict
                     iSelectedID = rbNew.Id;
                 rgDictList.AddView(rbNew);
             }
+            
 
             rgDictList.CheckedChange += (sender, e) => {
 
@@ -94,7 +71,9 @@ namespace DynaDict
                 tvHint.Text = "Dictionary: " + sDictName + " is selected! " + dm.GetTotalWordsNumberByDictName(sDictName) + " words.";
 
             };
-
+            //must be executed after listener "CheckedChange" definited.
+            rgDictList.Check(iSelectedID);
+            
             /*
             for (int i = 0; i < rgDictList.ChildCount; i++)
             {
@@ -107,7 +86,76 @@ namespace DynaDict
                 }
             }
             */
-            rgDictList.Check(iSelectedID);
+
+
+
+            btOpenDict.Click += delegate
+            {
+                Fragment fragment = new OpenDict();
+                FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
+            };
+
+            //remove words which is in "Trash" or "PassDict" from selected dictionary.
+            btRefresh.Click += delegate
+            {
+                if(sDictName.Equals("Trash") || sDictName.Equals("PassDict"))
+                    return;
+
+                List<string> lSelectedDict = dm.GetWordListByDictName(sDictName);
+                List<string> lTrash = dm.GetWordListByDictName("Trash");
+                List<string> lPassDict = dm.GetWordListByDictName("PassDict");
+
+                foreach (string sWord in lSelectedDict)
+                {
+                    if (lTrash.Contains(sWord))
+                        dm.RemoveWordFromDict(sDictName,sWord);
+                    if (lPassDict.Contains(sWord))
+                        dm.RemoveWordFromDict(sDictName, sWord);
+                }
+
+                tvHint.Text = "Dictionary: " + sDictName + " is refreshed! " + dm.GetTotalWordsNumberByDictName(sDictName) + " words.";
+            };
+
+            btRecreate.Click += delegate
+            {
+                if (sDictName.Equals("Trash") || sDictName.Equals("PassDict") || sDictName.Equals("NewWord"))
+                    return;
+
+                DictDataModel ddm = dm.GetDictFromDBByName(sDictName);
+                if (ddm is null)
+                {
+                    ddm = new DictDataModel();
+                    ddm.sDictName = sDictName;
+                }
+
+                ddm.UpdateDictWord();
+                dm.StoreDictToDB(ddm);
+
+                tvHint.Text = "Dictionary: " + sDictName + " is recreated! " + dm.GetTotalWordsNumberByDictName(sDictName) + " words.";
+            };
+
+            //delete dictionary. name can be set manually
+            btDelete.Click += delegate
+            {
+                for (int i = 0; i < rgDictList.ChildCount; i++)
+                {
+                    if (rgDictList.GetChildAt(i).Id == iSelectedID)
+                    {
+                        if (!sDictName.Equals(""))
+                        {
+                            dm.RemoveDictByName(sDictName);
+                            dm.SetDefaultValue("DictName", "");
+                        }
+                        rgDictList.RemoveViewAt(i);
+                        break;
+                    }
+                }
+                btDelete.Enabled = false;
+                dm.RemoveDictByName(sDictName);
+                DictDataModel ddm = dm.GetDictFromDBByName(sDictName);
+
+            };
+
 
             return view;
 

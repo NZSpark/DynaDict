@@ -22,11 +22,13 @@
 			android:id="@+id/llContainer">
 			<Button
 				android:text="Trash"
+				android:textAppearance="?android:textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/btOpenDictDelete" />
 			<Button
 				android:text="MoveTo"
+				android:textAppearance="?android:textAppearanceSmall"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:id="@+id/btOpenDictPass" />

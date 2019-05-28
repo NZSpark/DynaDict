@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout1">
         
@@ -35,18 +35,39 @@
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 			<Button
 			android:text="Open"
-			android:layout_width="wrap_content"
+			android:textAppearance="?android:textAppearanceSmall"
+			android:layout_width="0dp"
+			android:layout_weight=".25"
 			android:layout_height="wrap_content"
+				
 			android:id="@+id/btOpenDict" />   
     
 			<Button
-			android:text="Delete"
-			android:layout_width="wrap_content"
+			android:text="Refresh"
+				android:textAppearance="?android:textAppearanceSmall"
+			android:layout_width="0dp"
+			android:layout_weight=".25"
 			android:layout_height="wrap_content"
+			android:id="@+id/btRefresh" />   
+			<Button
+			android:text="Recreate"
+				android:textAppearance="?android:textAppearanceSmall"
+			android:layout_width="0dp"
+			android:layout_weight=".25"
+			android:layout_height="wrap_content"
+			android:autoText="true"
+			android:id="@+id/btRecreate" /> 
+			<Button
+			android:text="Delete"
+				android:textAppearance="?android:textAppearanceSmall"
+			android:layout_width="0dp"
+			android:layout_weight=".25"
+			android:layout_height="wrap_content"
+			android:autoText="true"
 			android:id="@+id/btDelete" />   
 		</LinearLayout> 
     </LinearLayout> 

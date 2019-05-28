@@ -99,6 +99,7 @@ namespace DynaDict
                 */
                 btDelete.Visibility = Android.Views.ViewStates.Invisible;
                 btPass.Visibility = Android.Views.ViewStates.Invisible;
+                spDictList.Visibility = Android.Views.ViewStates.Invisible;
                 return view;
             }
 
@@ -111,6 +112,7 @@ namespace DynaDict
                 //btPass.Enabled = false;
                 btDelete.Visibility = Android.Views.ViewStates.Invisible;
                 btPass.Visibility = Android.Views.ViewStates.Invisible;
+                spDictList.Visibility = Android.Views.ViewStates.Invisible;
                 return view;
             }
 

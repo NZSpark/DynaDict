@@ -31,6 +31,7 @@
 			android:layout_height="wrap_content">
 			<Button
 				android:text="Lookup"
+				android:textAppearance="?android:textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/btLookupLocal" />
@@ -50,11 +51,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			 />
-            <Button
-                android:text="Delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btDeleteWord" />
+
             </LinearLayout>
 		<TextView
 			android:id = "@+id/tvPhonics"
@@ -76,6 +73,12 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			 />
+		<Button
+                android:text="Delete"
+				android:textAppearance="?android:textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btDeleteWord" />
 	</LinearLayout>
 
 

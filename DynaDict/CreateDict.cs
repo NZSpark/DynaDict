@@ -39,17 +39,30 @@ namespace DynaDict
 
             DatabaseManager dm = new DatabaseManager();
 
+
+            etURL.KeyPress += (s, e) =>
+            {
+                if (e.Event.Action == KeyEventActions.Down && e.KeyCode == Keycode.Enter)
+                {
+                    e.Handled = true;
+                    btAdd.CallOnClick();
+                };
+            };
+
+
             btAdd.Click += delegate
             {
                 if (etURLList.Text.Contains(etURL.Text))
                     return;
                 DictDataModel ddm = dm.GetDictFromDBByName(etDictName.Text);
-                foreach (var url in ddm.sSourceLinks)
-                {
-                    if (etURLList.Text.Contains(url) || url.Equals(etURL.Text)  ) continue;
-                    etURLList.Text += url + "\r\n";
-                }
-                etURLList.Text += etURL.Text + "\r\n";                
+                if(ddm != null)
+                    foreach (var url in ddm.sSourceLinks)
+                    {
+                        if (etURLList.Text.Contains(url) || url.Equals(etURL.Text)  ) continue;
+                        etURLList.Text += url + "\r\n";
+                    }
+                if (!etURLList.Text.Contains(etURL.Text))
+                    etURLList.Text += etURL.Text + "\r\n";                
             };
 
             btCreate.Click += delegate

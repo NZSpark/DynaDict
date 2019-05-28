@@ -27,7 +27,10 @@ namespace DynaDict
             var view = inflater.Inflate(Resource.Layout.fragment_dictlist, container, false);
             //EditText etDictName = view.FindViewById<EditText>(Resource.Id.etDictListDictName);
             TextView tvHint = view.FindViewById<TextView>(Resource.Id.tvHint);
+
             Button btDelete = view.FindViewById<Button>(Resource.Id.btDelete);
+            Button btOpenDict = view.FindViewById<Button>(Resource.Id.btOpenDict);
+
             RadioGroup rgDictList = view.FindViewById<RadioGroup>(Resource.Id.rgDictList);
 
             int iSelectedID = 0;
@@ -35,8 +38,13 @@ namespace DynaDict
             DatabaseManager dm = new DatabaseManager();
             string sDictName = dm.GetDefaultValueByKey("DictName");
 
-            //delete dictionary. name can be set manually
-            btDelete.Click += delegate
+            btOpenDict.Click += delegate
+            {
+                Fragment fragment = new OpenDict();
+                FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
+            };
+                //delete dictionary. name can be set manually
+                btDelete.Click += delegate
             {
                 for(int i = 0;i<rgDictList.ChildCount;i++)
                 {

@@ -219,7 +219,7 @@ namespace DynaDict
         {
             DictDataModel ddm = new DictDataModel();
             //string sDicCNIn = ddm.LoadWebPage("http://www.dict.cn/" + sWord);
-            string sDicCNIn = ddm.LoadWebPage("http://m.dict.cn/msearch.php?q=" + sWord);
+            string sDicCNIn = ddm.LoadWebPage("http://m.dict.cn/msearch.php?q=" + sWord.ToLower());//only search lower case word.
 
             if (sDicCNIn is null)
                 return false;

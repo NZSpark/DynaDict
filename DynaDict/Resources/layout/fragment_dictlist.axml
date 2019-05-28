@@ -30,12 +30,25 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvHint"
             android:text="" />  
-        
-            <Button
-        android:text="Delete"
+    
+		<LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btDelete" />   
+        android:layout_height="wrap_content">
+			<Button
+			android:text="Open"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/btOpenDict" />   
+    
+			<Button
+			android:text="Delete"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/btDelete" />   
+		</LinearLayout> 
     </LinearLayout> 
 
 

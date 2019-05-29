@@ -31,14 +31,23 @@ namespace DynaDict
             EditText etURL = view.FindViewById<EditText>(Resource.Id.etURL);
             EditText etURLList = view.FindViewById<EditText>(Resource.Id.etURLList);
             TextView tvResult = view.FindViewById<TextView>(Resource.Id.tvResult);
+            TextView tvURLList = view.FindViewById<TextView>(Resource.Id.tvURLList);
             Button btAdd = view.FindViewById<Button>(Resource.Id.btAdd);
             Button btCreate = view.FindViewById<Button>(Resource.Id.btCreate);
+            CheckBox cbCreateByBulk = view.FindViewById<CheckBox>(Resource.Id.cbCreateByBulk);
 
             InputMethodManager imm = (InputMethodManager)view.Context.GetSystemService(Context.InputMethodService);
             imm.HideSoftInputFromWindow(view.WindowToken, HideSoftInputFlags.NotAlways);
 
             DatabaseManager dm = new DatabaseManager();
 
+            cbCreateByBulk.CheckedChange += delegate
+            {
+                 if (cbCreateByBulk.Checked)
+                     tvURLList.Text = "Bulk Text:";
+                 else
+                     tvURLList.Text = "URL List:";
+            };
 
             etURL.KeyPress += (s, e) =>
             {
@@ -82,17 +91,21 @@ namespace DynaDict
                 }
                 //only for test.
                 //etURLList.Text = "http://localhost:8080";
-
-                foreach (string s in etURLList.Text.Split("\r\n"))
+                if (cbCreateByBulk.Checked)
+                    ddm.UpdateDictWordByList(ddm.GetWordListFromString(etURLList.Text));
+                else
                 {
-                    if (!s.Equals(""))
+                    foreach (string s in etURLList.Text.Split("\r\n"))
                     {
-                        if (!ddm.sSourceLinks.Contains(s))
-                            ddm.sSourceLinks.Add(s);
+                        if (!s.Equals(""))
+                        {
+                            if (!ddm.sSourceLinks.Contains(s))
+                                ddm.sSourceLinks.Add(s);
+                        }
                     }
-                }
 
-                ddm.UpdateDictWord();
+                    ddm.UpdateDictWord();
+                }
                 dm.StoreDictToDB(ddm);
                 tvResult.Text = "Dictionary: " + ddm.sDictName + " is created. Total " + ddm.DictWordList.Count + " words added.";
                 Toast.MakeText(view.Context, "Dictionary is created!", ToastLength.Long).Show();
@@ -103,6 +116,11 @@ namespace DynaDict
             return view;
 
             //return base.OnCreateView(inflater, container, savedInstanceState);
+        }
+
+        private void @delegate(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -55,15 +55,16 @@ namespace DynaDict
 
             btLookupLocal.Click += delegate
             {
-                if (etWordToLookup.Text.Equals(""))
+                string sWord = etWordToLookup.Text.Replace(" ", "");
+                if (sWord.Equals(""))
                     return;
 
-                VocabularyDataModel vdm = dm.GetWordDefinition(etWordToLookup.Text);
+                VocabularyDataModel vdm = dm.GetWordDefinition(sWord);
                 if(vdm is null)
                     if(cbOnline.Checked)
                     {
                         DictDataModel ddm = new DictDataModel();
-                        vdm = ddm.LookupWordOnline(etWordToLookup.Text);
+                        vdm = ddm.LookupWordOnline(sWord);
                         if (vdm is null)
                         {
                             btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;

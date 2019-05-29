@@ -53,13 +53,14 @@ namespace DynaDict
 
         public void UpdateDictWord()
         {
-
+            /*
             List<string> passList = new List<string>();
             DatabaseManager dm = new DatabaseManager();
             //meaningless words should be passed.
             passList.AddRange(dm.GetWordListByDictName("Trash"));
             //familiar words should be passed.
             passList.AddRange(dm.GetWordListByDictName("PassDict"));
+            */
 
             if (sSourceLinks.Count >0)
             {
@@ -67,6 +68,8 @@ namespace DynaDict
                 {
                     //get all words in a url
                     List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
+                    UpdateDictWordByList(tmpWordList);
+                    /*
                     //List<string> tmpWordList = new List<string> { "hello", "world" }; //test www search
                     //List<string> tmpWordList = new List<string> { "join" };           //test mobile search
                     if (tmpWordList is null)
@@ -84,10 +87,36 @@ namespace DynaDict
                                 DictWordList.Add(vdm);
                         }
                     }
+                    */
                 }
             }
         }
 
+        public void UpdateDictWordByList(List<string> wordList)
+        {
+            List<string> passList = new List<string>();
+            DatabaseManager dm = new DatabaseManager();
+            //meaningless words should be passed.
+            passList.AddRange(dm.GetWordListByDictName("Trash"));
+            //familiar words should be passed.
+            passList.AddRange(dm.GetWordListByDictName("PassDict"));
+
+            if (wordList is null)
+                return;
+
+            foreach (var v in wordList)
+            {
+                if (passList.Contains(v))
+                    continue;
+                //add word into dictionary if it does not exist.
+                if (LookupWordLocal(v) == null)
+                {
+                    VocabularyDataModel vdm = LookupWordOnline(v);
+                    if (vdm != null)
+                        DictWordList.Add(vdm);
+                }
+            }
+        }
         public string LoadWebPage(string sWebPageURL)
         {
             string sResult = null;

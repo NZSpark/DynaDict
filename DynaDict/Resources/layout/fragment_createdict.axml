@@ -5,7 +5,6 @@
     tools:context="com.chrisrisner.fragmentsample.FragmentOne">
 
     <!-- TODO: Update blank fragment layout -->
-
 	<LinearLayout
 		android:orientation="vertical"
 		android:minWidth="25px"
@@ -14,70 +13,82 @@
 		android:layout_height="match_parent"
 		android:id="@+id/linearLayout1">
 		<LinearLayout
-		android:orientation="horizontal"
-		android:minWidth="25px"
-		android:minHeight="25px"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/linearLayout1">
+			android:orientation="horizontal"
+			android:minWidth="25px"
+			android:minHeight="25px"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/linearLayout1">
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="Dict Name:" />
 			<EditText
-                android:minWidth="190px"
+				android:minWidth="190px"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/etDictName"
 				android:text="test" />
 		</LinearLayout >
 		<LinearLayout
-		android:orientation="horizontal"
-		android:minWidth="25px"
-		android:minHeight="25px"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/linearLayout1">
+			android:orientation = "horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+			<Button
+				android:text="Create"
+				android:textAppearance="?android:textAppearanceSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/btCreate" />
+			<CheckBox
+				android:text="Create by bulk"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/cbCreateByBulk" />
+		</LinearLayout>
+		
+		<TextView
+			android:text="URL List"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/tvURLList" />
+		<EditText
+			android:minWidth="300px"
+			android:inputType="textMultiLine"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/etURLList" />
+		<LinearLayout
+			android:orientation="horizontal"
+			android:minWidth="25px"
+			android:minHeight="25px"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/linearLayout1">
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="URL:" />
 			<EditText
-                android:minWidth="250px"
+				android:minWidth="250px"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/etURL" 
-                android:text="http://m.dict.cn"/>
-		</LinearLayout >
+				android:id="@+id/etURL"
+				android:text="http://m.dict.cn"/>
+		
 		<Button
 			android:text="Add"
 			android:textAppearance="?android:textAppearanceSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/btAdd" />
+		</LinearLayout >
 		<TextView
-			android:text="URL List"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:id="@+id/textView1" />
-		<EditText
-            android:minWidth="300px"
-			android:inputType="textMultiLine"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/etURLList" />
-		<Button
-			android:text="Create"
-			android:textAppearance="?android:textAppearanceSmall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/btCreate" />
-        <TextView
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvResult" />
+			android:id="@+id/tvResult" />
 	</LinearLayout >
 
 </FrameLayout>

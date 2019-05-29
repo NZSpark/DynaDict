@@ -55,7 +55,7 @@ namespace DynaDict
 
             btLookupLocal.Click += delegate
             {
-                string sWord = etWordToLookup.Text.Replace(" ", "");
+                string sWord = etWordToLookup.Text.Trim();
                 if (sWord.Equals(""))
                     return;
 

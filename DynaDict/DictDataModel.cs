@@ -125,9 +125,10 @@ namespace DynaDict
 
             try
             {
+                ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sWebPageURL);
                 request.Method = "GET";
-                request.Timeout = 10000;
+                request.Timeout = 30000;
                 response = request.GetResponse();
                 reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 sResult = reader.ReadToEnd();
@@ -145,6 +146,12 @@ namespace DynaDict
                     response.Close();
             }
             return sResult;
+        }
+
+        //for https request.
+        public bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
 
         //Generate a list of unique words. 

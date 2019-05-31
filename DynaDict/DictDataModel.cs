@@ -19,7 +19,7 @@ namespace DynaDict
 {
     class DictDataModel
     {
-        private static int MAXTHREAD = 10;
+        private static int MAXTHREAD = 20;
         private Task [] DownLoadTask = new Task[MAXTHREAD];
 
         public string sDictName = "embryo";
@@ -30,20 +30,27 @@ namespace DynaDict
         //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
         public VocabularyDataModel LookupWordLocal(string sWord)
         {
-            VocabularyDataModel vdm = null;
+            DatabaseManager dm = new DatabaseManager();
+            return dm.GetWordDefinition(sWord);
+            //VocabularyDataModel vdm = null;
+
+            /*
             //lookup in dictionary.
             foreach (var v in DictWordList)
             {
                 if (v.sVocabulary.Equals(sWord))
                     return v;
             }
+
+
             //lookup in whole database.
-            DatabaseManager dm = new DatabaseManager();
+
             vdm = dm.GetWordDefinition(sWord);
             if (vdm is null)
                 return null;
             DictWordList.Add(vdm);
             return vdm;
+            */
         }
 
         public VocabularyDataModel LookupWordOnline(string sWord)
@@ -114,15 +121,16 @@ namespace DynaDict
                 if (passList.Contains(v))
                     continue;
                 //add word into dictionary if it does not exist.
-                if (LookupWordLocal(v) == null)
+                VocabularyDataModel vdm = LookupWordLocal(v);
+                if ( vdm == null)
                 {
                     /*
                     VocabularyDataModel vdm = LookupWordOnline(v);
                     if (vdm != null)
                         DictWordList.Add(vdm);
                     */
-                    bool bTaskRuning = false;
-                    while (!bTaskRuning)
+                    bool bChooseThread = true;
+                    while (bChooseThread)
                     {
                         for (int i = 0; i < MAXTHREAD; i++)
                         {
@@ -130,13 +138,17 @@ namespace DynaDict
                             {
                                 DownLoadTask[i] = new Task(() => { LookupWordOnlineThread(v); });
                                 DownLoadTask[i].Start();
-                                bTaskRuning = true;
+                                bChooseThread = false;
                                 break;
                             }
                         }
-                        if(!bTaskRuning)
+                        if(bChooseThread)
                             System.Threading.Thread.Sleep(1000);
                     }
+                }
+                else
+                {
+                    DictWordList.Add(vdm);
                 }
             }
 

@@ -7,7 +7,7 @@
     <!-- TODO: Update blank fragment layout -->
 	<LinearLayout
 		android:orientation="vertical"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 		<TextView
 			android:id = "@+id/tvOpenDictDictName"
@@ -17,7 +17,7 @@
 
 		<LinearLayout
 			android:orientation="horizontal"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/llContainer">
 			<Button
@@ -29,7 +29,7 @@
 			<Button
 				android:text="MoveTo"
 				android:textAppearance="?android:textAppearanceSmall"
-				android:layout_width="match_parent"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/btOpenDictPass" />
 			<Spinner
@@ -40,36 +40,37 @@
                 android:tooltipText="PassDict"/>
 		</LinearLayout>
 	<ScrollView
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
         android:layout_height="wrap_content"
 			android:id = "@+id/svWord">
 		<LinearLayout
 		android:orientation="vertical"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 			<TextView
 				android:id = "@+id/tvWordName"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+                android:textStyle="bold"
 				/>
 			<TextView
 				android:id = "@+id/tvPhonics"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				 />
 			<TextView
 				android:id = "@+id/tvChineseDefinition"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				 />
 			<TextView
 				android:id = "@+id/tvEnglishDefinition"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				/>
 			<TextView
 				android:id = "@+id/tvSentences"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				 />
 		</LinearLayout>

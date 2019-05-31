@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using Android.App;
 using Android.Content;
@@ -18,6 +19,9 @@ namespace DynaDict
 {
     class DictDataModel
     {
+        private static int MAXTHREAD = 10;
+        private Task [] DownLoadTask = new Task[MAXTHREAD];
+
         public string sDictName = "embryo";
         public string sDictDescription = "Gene editing.";
         public List<string> sSourceLinks = new List<string>();
@@ -69,6 +73,7 @@ namespace DynaDict
                     //get all words in a url
                     List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
                     UpdateDictWordByList(tmpWordList);
+
                     /*
                     //List<string> tmpWordList = new List<string> { "hello", "world" }; //test www search
                     //List<string> tmpWordList = new List<string> { "join" };           //test mobile search
@@ -111,12 +116,48 @@ namespace DynaDict
                 //add word into dictionary if it does not exist.
                 if (LookupWordLocal(v) == null)
                 {
+                    /*
                     VocabularyDataModel vdm = LookupWordOnline(v);
                     if (vdm != null)
                         DictWordList.Add(vdm);
+                    */
+                    bool bTaskRuning = false;
+                    while (!bTaskRuning)
+                    {
+                        for (int i = 0; i < MAXTHREAD; i++)
+                        {
+                            if (DownLoadTask[i] == null || DownLoadTask[i].Status == TaskStatus.RanToCompletion)
+                            {
+                                DownLoadTask[i] = new Task(() => { LookupWordOnlineThread(v); });
+                                DownLoadTask[i].Start();
+                                bTaskRuning = true;
+                                break;
+                            }
+                        }
+                        if(!bTaskRuning)
+                            System.Threading.Thread.Sleep(1000);
+                    }
+                }
+            }
+
+            for (int i = 0; i < MAXTHREAD; i++)
+            {
+                if (DownLoadTask[i] != null && DownLoadTask[i].Status == TaskStatus.Running)
+                {
+                    DownLoadTask[i].Wait();
                 }
             }
         }
+
+
+        protected void LookupWordOnlineThread(string sWord)
+        {
+            VocabularyDataModel vdm = LookupWordOnline(sWord);
+            if (vdm != null)
+                DictWordList.Add(vdm);
+        }
+
+
         public string LoadWebPage(string sWebPageURL)
         {
             string sResult = null;

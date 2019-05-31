@@ -76,6 +76,7 @@ namespace DynaDict
             tvEnglishDefinition = view.FindViewById<TextView>(Resource.Id.tvEnglishDefinition);
             tvSentences = view.FindViewById<TextView>(Resource.Id.tvSentences);
             TextView tvOpenDictDictName = view.FindViewById<TextView>(Resource.Id.tvOpenDictDictName);
+            ScrollView svWord = view.FindViewById<ScrollView>(Resource.Id.svWord);
 
             //LinearLayout llContainer = view.FindViewById<LinearLayout>(Resource.Id.llContainer);
             Spinner spDictList = view.FindViewById<Spinner>(Resource.Id.spDictList);
@@ -185,7 +186,7 @@ namespace DynaDict
                 ResetControlText(ddm.DictWordList[_CurrentWordID]);
             };
 
-            view.Touch += (s, e) =>
+            svWord.Touch += (s, e) =>
             {
                 var handled = false;
 

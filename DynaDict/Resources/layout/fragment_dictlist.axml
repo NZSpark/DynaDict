@@ -5,6 +5,9 @@
     tools:context="com.chrisrisner.fragmentsample.FragmentOne">
 
     <!-- TODO: Update blank fragment layout -->
+	<ScrollView
+		android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:orientation="vertical"
         android:minWidth="25px"
@@ -71,6 +74,6 @@
 			android:id="@+id/btDelete" />   
 		</LinearLayout> 
     </LinearLayout> 
-
+	</ScrollView>
 
 </FrameLayout>

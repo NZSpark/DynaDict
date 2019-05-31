@@ -42,43 +42,47 @@
 				android:checked = "true"
 				android:id="@+id/cbOnline" />
 		</LinearLayout>
-		        <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
+		<ScrollView
+		android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-            <TextView
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+			<TextView
 			android:id = "@+id/tvWordName"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			 />
+				/>
 
-            </LinearLayout>
-		<TextView
-			android:id = "@+id/tvPhonics"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			 />
-		<TextView
-			android:id = "@+id/tvChineseDefinition"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			 />
-		<TextView
-			android:id = "@+id/tvEnglishDefinition"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			 />
-		<TextView
-			android:id = "@+id/tvSentences"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			 />
-		<Button
-                android:text="Delete"
-				android:textAppearance="?android:textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btDeleteWord" />
+			<TextView
+				android:id = "@+id/tvPhonics"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				 />
+			<TextView
+				android:id = "@+id/tvChineseDefinition"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				 />
+			<TextView
+				android:id = "@+id/tvEnglishDefinition"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				 />
+			<TextView
+				android:id = "@+id/tvSentences"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				 />
+			<Button
+					android:text="Delete"
+					android:textAppearance="?android:textAppearanceSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:id="@+id/btDeleteWord" />
+			</LinearLayout>
+		</ScrollView>
 	</LinearLayout>
 
 

@@ -135,8 +135,6 @@
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values-v21\styles.xml" />
     <AndroidResource Include="Resources\drawable\side_nav_bar.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_camera.xml" />
-    <AndroidResource Include="Resources\drawable-v21\ic_menu_gallery.xml" />
     <AndroidResource Include="Resources\drawable-v21\ic_menu_manage.xml" />
     <AndroidResource Include="Resources\drawable-v21\ic_menu_send.xml" />
     <AndroidResource Include="Resources\drawable-v21\ic_menu_share.xml" />
@@ -161,6 +159,10 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
     <AndroidResource Include="Resources\layout\fragment_tools.axml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_createdict.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_dictlist.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_lookup.xml" />
+    <AndroidResource Include="Resources\drawable-v21\ic_menu_opendict.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
@@ -168,7 +170,7 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.1" />
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.4</Version>
+      <Version>1.11.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite">
       <Version>2.2.4</Version>

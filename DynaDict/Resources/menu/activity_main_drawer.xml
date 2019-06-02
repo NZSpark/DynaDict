@@ -6,19 +6,19 @@
     <group android:checkableBehavior="single">
       <item
             android:id="@+id/menu_lookup"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_lookup"
             android:title="Lookup" />
         <item
             android:id="@+id/menu_createdict"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_createdict"
             android:title="CreateDict" />
         <item
             android:id="@+id/menu_dictlist"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_dictlist"
             android:title="DictList" />
         <item
             android:id="@+id/menu_opendicts"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_opendict"
             android:title="OpenDicts" />
         <item
             android:id="@+id/menu_tools"

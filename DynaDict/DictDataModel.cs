@@ -217,7 +217,7 @@ namespace DynaDict
             for (int i = 0; i < sResult.Length; i++)
             {
                 //English word [A~Za~z];
-                if ((sResult[i] > 'A' && sResult[i] < 'Z') || (sResult[i] > 'a' && sResult[i] < 'z'))
+                if ((sResult[i] >= 'A' && sResult[i] <= 'Z') || (sResult[i] >= 'a' && sResult[i] <= 'z'))
                     continue;
                 sResult[i] = ' ';
             }

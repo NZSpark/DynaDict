@@ -10,7 +10,7 @@ This APP is to create English dictionaries dynamically against URLs. It's easy t
 
 * Multiple Threads/Tasks.
 
-* Dropdown list generation dynamically.
+* Dropdown list generation dynamically (Spinner).
 
 * ScrollView, CheckBox, EditView, TextView, Button.
 

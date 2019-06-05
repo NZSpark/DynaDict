@@ -26,4 +26,8 @@ This APP is to create English dictionaries dynamically against URLs. It's easy t
 
 * JSON handling (Newtonsoft.Json).
 
+* Git clone, checkout, status, add, commit, reset, clean, log.
+
+
+
 

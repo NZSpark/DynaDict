@@ -68,7 +68,11 @@ namespace DynaDict
                         if (vdm is null)
                         {
                             btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
-                            tvWordName.Text = "No such word. Does it spell right?";
+                            tvWordName.Text = "No such word. Does it spell right?";                            
+                            tvPhonics.Text = "";
+                            tvChineseDefinition.Text = "";
+                            tvEnglishDefinition.Text = "";
+                            tvSentences.Text = "";
                             return;
                         }
                         dm.SaveWordToDict("NewWord", vdm);
@@ -76,6 +80,10 @@ namespace DynaDict
                     else {
                         btDeleteWord.Visibility = Android.Views.ViewStates.Invisible;
                         tvWordName.Text = "It's a new word. Please select Online checkbox. ";
+                        tvPhonics.Text = "";
+                        tvChineseDefinition.Text = "";
+                        tvEnglishDefinition.Text = "";
+                        tvSentences.Text = "";
                         return;
                     }
                 btDeleteWord.Visibility = Android.Views.ViewStates.Visible;
@@ -99,7 +107,6 @@ namespace DynaDict
                 tvChineseDefinition.Text = "";
                 tvEnglishDefinition.Text = "";
                 tvSentences.Text = "";
-
             };
             return view;
         }

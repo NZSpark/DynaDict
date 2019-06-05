@@ -147,7 +147,8 @@ namespace DynaDict
 
             btDelete.Click += delegate
             {
-                dm.SaveWordToDict("Trash", ddm.DictWordList[_CurrentWordID]);
+                if(!ddm.sDictName.Equals("Trash"))
+                    dm.SaveWordToDict("Trash", ddm.DictWordList[_CurrentWordID]);
                 dm.RemoveWordFromDict(ddm.sDictName, ddm.DictWordList[_CurrentWordID].sVocabulary);
                 ddm.DictWordList.Remove(ddm.DictWordList[_CurrentWordID]);
 

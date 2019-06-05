@@ -20,12 +20,12 @@ namespace DynaDict
     class DictDataModel
     {
         private static int MAXTHREAD = 20;
-        private Task [] DownLoadTask = new Task[MAXTHREAD];
+        private Task[] DownLoadTask = new Task[MAXTHREAD];
 
         public string sDictName = "embryo";
         public string sDictDescription = "Gene editing.";
         public List<string> sSourceLinks = new List<string>();
-        public List<VocabularyDataModel> DictWordList = new List<VocabularyDataModel>() ;
+        public List<VocabularyDataModel> DictWordList = new List<VocabularyDataModel>();
 
         //look up word in dictionary, if word exists, return the defination of word, otherwise, return null.
         public VocabularyDataModel LookupWordLocal(string sWord)
@@ -56,7 +56,7 @@ namespace DynaDict
         public VocabularyDataModel LookupWordOnline(string sWord)
         {
             VocabularyDataModel vdm = new VocabularyDataModel();
-            if(vdm.ExtractDefinitionFromDicCN(sWord))
+            if (vdm.ExtractDefinitionFromDicCN(sWord))
                 return vdm;
             return null;
         }
@@ -73,9 +73,9 @@ namespace DynaDict
             passList.AddRange(dm.GetWordListByDictName("PassDict"));
             */
 
-            if (sSourceLinks.Count >0)
+            if (sSourceLinks.Count > 0)
             {
-                foreach(var s in sSourceLinks)
+                foreach (var s in sSourceLinks)
                 {
                     //get all words in a url
                     List<string> tmpWordList = GetWordListFromString(LoadWebPage(s));
@@ -122,7 +122,7 @@ namespace DynaDict
                     continue;
                 //add word into dictionary if it does not exist.
                 VocabularyDataModel vdm = LookupWordLocal(v);
-                if ( vdm == null)
+                if (vdm == null)
                 {
                     /*
                     VocabularyDataModel vdm = LookupWordOnline(v);
@@ -142,7 +142,7 @@ namespace DynaDict
                                 break;
                             }
                         }
-                        if(bChooseThread)
+                        if (bChooseThread)
                             System.Threading.Thread.Sleep(1000);
                     }
                 }
@@ -180,6 +180,7 @@ namespace DynaDict
             {
                 ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(sWebPageURL);
+                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 request.Method = "GET";
                 request.Timeout = 30000;
                 response = request.GetResponse();
@@ -212,21 +213,62 @@ namespace DynaDict
         {
             if (sInput == null)
                 return null;
-            char [] sResult = sInput.ToArray();
-           
+            sInput = RemoveContentByTag(sInput,"script");
+            sInput = RemoveContentByTag(sInput, "style");
+
+            char[] sResult = sInput.ToArray();
+            bool bRemove = false; //In HTML web page, there are some encrypted scripts, which will generate meaningless words.
+
             for (int i = 0; i < sResult.Length; i++)
             {
+                //Tag begins;
+                if (sResult[i] == '<')
+                    bRemove = true;
+                //Tag ends;
+                if (sResult[i] == '>')
+                {
+                    bRemove = false;
+                    sResult[i] = ' ';
+                    continue;
+                }
+
+                //Remove Tag
+                if (bRemove)
+                {
+                    sResult[i] = ' ';
+                    continue;
+                }
+
                 //English word [A~Za~z];
                 if ((sResult[i] >= 'A' && sResult[i] <= 'Z') || (sResult[i] >= 'a' && sResult[i] <= 'z'))
                     continue;
+
                 sResult[i] = ' ';
             }
 
-            string [] sWordList = new string(sResult).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] sWordList = new string(sResult).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             sWordList = sWordList.Distinct().ToArray();
             return new List<string>(sWordList);
         }
 
+        public string RemoveContentByTag(string sInput, string sTag)
+        {
+            sInput = sInput.ToLower();
+            string sReturn = "";
+            int iBegin = sInput.IndexOf("<" + sTag);
+            int iEnd = 0 ;
+            while (iBegin > -1)
+            {
+                sReturn += sInput.Substring(0, iBegin);
+                iEnd = sInput.IndexOf("</" + sTag); ;
+                if (iEnd < iBegin) return sReturn; ;
+                iBegin = sInput.IndexOf(">", iEnd +1);
+                sInput = sInput.Substring(iBegin+1);
+                iBegin = sInput.IndexOf("<" + sTag);
+            }
+            sReturn += sInput;
+            return sReturn;
+        }
 
 
     }

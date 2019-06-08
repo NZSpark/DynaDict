@@ -338,7 +338,7 @@ namespace DynaDict
                 var liST = divSTList[0].Descendants("li").ToList();
                 foreach (var li in liST)
                 {
-                    sSentences.Add(li.InnerText);
+                    sSentences.Add(li.InnerText.Replace("\t", ""));
                 }
             }
 
@@ -409,7 +409,7 @@ namespace DynaDict
                 var liST = divSTList[0].Descendants("li").ToList();
                 foreach (var li in liST)
                 {
-                    sSentences.Add(li.InnerText);
+                    sSentences.Add(li.InnerText.Replace("\t", ""));
                 }
             }
 

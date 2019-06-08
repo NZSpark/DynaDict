@@ -25,13 +25,13 @@
 				android:textAppearance="?android:textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/btOpenDictDelete" />
+				android:id="@+id/btOpenDictMoveToTrash" />
 			<Button
 				android:text="MoveTo"
 				android:textAppearance="?android:textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/btOpenDictPass" />
+				android:id="@+id/btOpenDictMoveToPass" />
 			<Spinner
 				android:id="@+id/spDictList"
 				android:layout_width="wrap_content"
@@ -73,12 +73,20 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				 />
+            <Button
+                    android:text="Refresh"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btOpenDictRefresh" />
+                
 			<Button
 					android:text="Delete"
 					android:textAppearance="?android:textAppearanceSmall"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:id="@+id/btDelete" />
+					android:id="@+id/btOpenDictDelete" />
+            
 		</LinearLayout>
 		</ScrollView>
 	</LinearLayout>

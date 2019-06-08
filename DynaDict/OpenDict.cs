@@ -23,9 +23,10 @@ namespace DynaDict
 
         DatabaseManager dm = new DatabaseManager();
 
-        Button btDelete;
-        Button btPass;
-
+        Button btOpenDictDelete;
+        Button btOpenDictMoveToPass;
+        Button btOpenDictMoveToTrash;
+        Button btOpenDictRefresh;
         TextView tvWordName ;
         TextView tvPhonics;
         TextView tvChineseDefinition;
@@ -56,8 +57,8 @@ namespace DynaDict
             tvChineseDefinition.Text = string.Join(Environment.NewLine, vdm.sChineseDefinition.ToArray());
             tvEnglishDefinition.Text = string.Join(Environment.NewLine, vdm.sEnglishDefinition.ToArray());
             tvSentences.Text = string.Join(Environment.NewLine, vdm.sSentences.ToArray());
-
-
+            btOpenDictDelete.Visibility = ViewStates.Visible;
+            btOpenDictRefresh.Visibility = ViewStates.Visible;
             return;
         }
 
@@ -67,8 +68,10 @@ namespace DynaDict
 
             var view = inflater.Inflate(Resource.Layout.fragment_opendicts, container, false);
 
-            btDelete = view.FindViewById<Button>(Resource.Id.btOpenDictDelete);
-            btPass = view.FindViewById<Button>(Resource.Id.btOpenDictPass);
+            btOpenDictMoveToTrash = view.FindViewById<Button>(Resource.Id.btOpenDictMoveToTrash);
+            btOpenDictMoveToPass = view.FindViewById<Button>(Resource.Id.btOpenDictMoveToPass);
+            btOpenDictDelete = view.FindViewById<Button>(Resource.Id.btOpenDictDelete);
+            btOpenDictRefresh = view.FindViewById<Button>(Resource.Id.btOpenDictRefresh);
 
             tvWordName = view.FindViewById<TextView>(Resource.Id.tvWordName);
             tvPhonics = view.FindViewById<TextView>(Resource.Id.tvPhonics);
@@ -98,8 +101,8 @@ namespace DynaDict
                 tvEnglishDefinition.Text = "";
                 tvSentences.Text = "";
                 */
-                btDelete.Visibility = Android.Views.ViewStates.Invisible;
-                btPass.Visibility = Android.Views.ViewStates.Invisible;
+                btOpenDictMoveToTrash.Visibility = Android.Views.ViewStates.Invisible;
+                btOpenDictMoveToPass.Visibility = Android.Views.ViewStates.Invisible;
                 spDictList.Visibility = Android.Views.ViewStates.Invisible;
                 return view;
             }
@@ -111,8 +114,8 @@ namespace DynaDict
             {
                 //btDelete.Enabled = false;
                 //btPass.Enabled = false;
-                btDelete.Visibility = Android.Views.ViewStates.Invisible;
-                btPass.Visibility = Android.Views.ViewStates.Invisible;
+                btOpenDictMoveToTrash.Visibility = Android.Views.ViewStates.Invisible;
+                btOpenDictMoveToPass.Visibility = Android.Views.ViewStates.Invisible;
                 spDictList.Visibility = Android.Views.ViewStates.Invisible;
                 return view;
             }
@@ -145,7 +148,39 @@ namespace DynaDict
                 _targetDictName = spDictList.SelectedItem.ToString();
             };
 
-            btDelete.Click += delegate
+            btOpenDictRefresh.Click += delegate
+            {
+                dm.RemoveWordFromAllDict(ddm.DictWordList[_CurrentWordID].sVocabulary);
+                VocabularyDataModel vdm = new VocabularyDataModel();
+                vdm.ExtractDefinitionFromDicCN(ddm.DictWordList[_CurrentWordID].sVocabulary);
+                dm.SaveWordToDict(sDictName, vdm);
+                ddm.DictWordList[_CurrentWordID] = vdm;
+
+                ResetControlText(ddm.DictWordList[_CurrentWordID]);
+            };
+
+            btOpenDictDelete.Click += delegate
+            {
+                dm.RemoveWordFromAllDict(ddm.DictWordList[_CurrentWordID].sVocabulary);
+                ddm.DictWordList.Remove(ddm.DictWordList[_CurrentWordID]);
+
+                //no more words in dictionary.
+                if (ddm.DictWordList.Count == 0)
+                {
+                    tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", 0 words.";
+                    btOpenDictMoveToTrash.Enabled = false;
+                    btOpenDictMoveToPass.Enabled = false;
+                    btOpenDictDelete.Visibility = ViewStates.Invisible;
+                    btOpenDictRefresh.Visibility = ViewStates.Invisible;
+                    return;
+                }
+
+                if (_CurrentWordID == ddm.DictWordList.Count)
+                    _CurrentWordID = 0;
+                ResetControlText(ddm.DictWordList[_CurrentWordID]);
+            };
+
+            btOpenDictMoveToTrash.Click += delegate
             {
                 if(!ddm.sDictName.Equals("Trash"))
                     dm.SaveWordToDict("Trash", ddm.DictWordList[_CurrentWordID]);
@@ -156,8 +191,10 @@ namespace DynaDict
                 if (ddm.DictWordList.Count == 0)
                 {
                     tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", 0 words.";
-                    btDelete.Enabled = false;
-                    btPass.Enabled = false;
+                    btOpenDictMoveToTrash.Enabled = false;
+                    btOpenDictMoveToPass.Enabled = false;
+                    btOpenDictDelete.Visibility = ViewStates.Invisible;
+                    btOpenDictRefresh.Visibility = ViewStates.Invisible;
                     return;
                 }
 
@@ -166,7 +203,7 @@ namespace DynaDict
                 ResetControlText(ddm.DictWordList[_CurrentWordID]);
             };
 
-            btPass.Click += delegate
+            btOpenDictMoveToPass.Click += delegate
             {
                 if (ddm.sDictName.Equals(_targetDictName)) return; //To move to itself is forbidden.
                 dm.SaveWordToDict(_targetDictName, ddm.DictWordList[_CurrentWordID]);
@@ -177,8 +214,10 @@ namespace DynaDict
                 if (ddm.DictWordList.Count == 0)
                 {
                     tvOpenDictDictName.Text = "Dictionary: " + sDictName + ", 0 words.";
-                    btDelete.Enabled = false;
-                    btPass.Enabled = false;
+                    btOpenDictMoveToTrash.Enabled = false;
+                    btOpenDictMoveToPass.Enabled = false;
+                    btOpenDictDelete.Visibility = ViewStates.Invisible;
+                    btOpenDictRefresh.Visibility = ViewStates.Invisible;
                     return;
                 }
 
@@ -199,14 +238,14 @@ namespace DynaDict
                         break;
                     case MotionEventActions.Up:
                         var left = (int)(_viewX - e.Event.GetX() );
-                        if (left > 100)
+                        if (left > 150)
                         {
                             _CurrentWordID++;
                             if (_CurrentWordID == ddm.DictWordList.Count)
                                 _CurrentWordID = 0;
 
                         }
-                        if (left < -100)
+                        if (left < -150)
                         {
                             _CurrentWordID--;
                             if (_CurrentWordID < 0)

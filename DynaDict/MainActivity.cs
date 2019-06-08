@@ -34,11 +34,16 @@ namespace DynaDict
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
 
-            //show a default dictionary.
-            Fragment fragment = new LooupLocal();
-            FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
+            ShowLookup();
         }
 
+        //show a default dictionary.
+        public Android.Views.View.IOnClickListener ShowLookup()
+        {
+            Fragment fragment = new LooupLocal();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.flContent, fragment).Commit();
+            return null;
+        }
         public override void OnBackPressed()
         {
             DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -72,8 +77,10 @@ namespace DynaDict
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
             View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+            //Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
+            //    .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+            Snackbar.Make(view, "Look up a new work in dictonary.", Snackbar.LengthLong)
+                .SetAction("Action", ShowLookup()).Show();
         }
 
         public bool OnNavigationItemSelected(IMenuItem item)

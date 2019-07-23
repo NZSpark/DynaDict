@@ -19,4 +19,6 @@ public class View {
         chartList[1] = chart;
     }
 
+
+
 }

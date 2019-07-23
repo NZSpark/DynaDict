@@ -44,35 +44,4 @@ public class Chart {
     }
 }
 
-public class Point {
-    public int x;
-    public int y;
 
-    public Point(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
-
-    //There are 5 results to compare to points. here only return 3 results.
-    pubic int Compare(Point p)
-    {
-        if( p.x > x && p.y > y )
-            return 1;
-        else if ( p.x == x && p.y == y)
-            return 0;
-        return -1;
-    }
-}
-
-public class Color{
-    public int R;
-    public int G;
-    public int B;
-
-    pubic Color(int r, int g, int b)
-    {
-        this.R = r;
-        this.G = g;
-        this.B = b;
-    }
-}

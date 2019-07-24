@@ -2,14 +2,18 @@ package com.nz.spark.chartrenderer;
 
 public class Chart {
     private Point pTopLeft;
+    private Point pTopRight;
     private Point pBottomRight;
-    private Color cChartColor;
+    private Point pBottomLeft;
+    private Colour cChartColour;
 
-    public Chart (Point tl, Point br, Color cc)
+    public Chart (Point tl, Point br, Colour cc)
     {
-        this.pTopLeft = tl;
-        this.pBottomRight = br;
-        this.cChartColor = cc;
+        pTopLeft = tl;
+        pBottomRight = br;
+        cChartColour = cc;
+        pTopRight = new Point(pBottomRight.x ,pTopLeft.y);
+        pBottomLeft = new Point(pTopLeft.x, pBottomRight.y);
     }
 
     public void setpBottomRight(Point pBottomRight) {
@@ -28,12 +32,20 @@ public class Chart {
         return pTopLeft;
     }
 
-    public void setcChartColor(Color cChartColor) {
-        this.cChartColor = cChartColor;
+    public Point getpBottomLeft() {
+        return pBottomLeft;
     }
 
-    public Color getcChartColor() {
-        return cChartColor;
+    public Point getpTopRight() {
+        return pTopRight;
+    }
+
+    public void setcChartColour(Colour cChartColour) {
+        this.cChartColour = cChartColour;
+    }
+
+    public Colour getcChartColour() {
+        return cChartColour;
     }
 
     boolean isInChart(Point p)

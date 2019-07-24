@@ -5,6 +5,16 @@ public class Point {
     public int y;
 
     Point(int x, int y){
+        //check point value is in range {0,100]
+        if(x < 0)
+            x =0;
+        if(x > 100)
+            x =100;
+        if(y < 0)
+            y =0;
+        if(y > 100)
+            y =100;
+
         this.x = x;
         this.y = y;
     }

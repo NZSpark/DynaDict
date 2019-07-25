@@ -1,0 +1,124 @@
+
+public class Client {
+    private final AbstractFactory_MessageQueue factory;
+
+    public Client(AbstractFactory_MessageQueue factory) {
+        // The factory creates message queues either for Azure or MSMQ.
+        // The client does not know which technology is used.
+        this.factory = factory;
+    }
+
+    public void sendMessage() {
+        //The client doesn't know whether the OutboundQueue is Azure or MSMQ.
+        OutboundQueue out = factory.createProductA();
+        out.sendMessage("Hello Abstract Factory!");
+    }
+
+    public String receiveMessage() {
+        //The client doesn't know whether the ReplyQueue is Azure or MSMQ.
+        ReplyQueue in = factory.createProductB();
+        return in.receiveMessage();
+    }
+}
+
+public interface AbstractFactory_MessageQueue {
+    OutboundQueue createProductA();
+    ReplyQueue createProductB();
+}
+
+public class ConcreteFactory_Azure implements AbstractFactory_MessageQueue {
+    @Override
+    public OutboundQueue createProductA() {
+        return new AzureMessageQueue();
+    }
+
+    @Override
+    public ReplyQueue createProductB() {
+        return new AzureResponseMessageQueue();
+    }
+}
+
+
+public class ConcreteFactory_Msmq implements AbstractFactory_MessageQueue {
+    @Override
+    public OutboundQueue createProductA() {
+        return new MsmqMessageQueue();
+    }
+
+    @Override
+    public ReplyQueue createProductB() {
+        return new MsmqResponseMessageQueue();
+    }
+}
+
+public class OutboundQueue
+{
+    public void sendMessage(String sIn)
+    {
+        System.out.println(sIn);
+    }
+}
+
+public class ReplyQueue
+{
+    public String receiveMessage()
+    {
+        return "Test Message!";
+    }
+}
+
+public class AzureMessageQueue extends OutboundQueue
+{
+    public void sendMessage(String sIn)
+    {
+        System.out.println("Get Azure message:" + sIn);
+    }
+}
+
+
+public class AzureResponseMessageQueue extends ReplyQueue
+{
+    public String receiveMessage()
+    {
+        return "Test Message from Azure";
+    }
+}
+
+public class MsmqMessageQueue extends OutboundQueue
+{
+    public void sendMessage(String sIn)
+    {
+        System.out.println("Get Msmq message:" + sIn);
+    }
+}
+
+
+public class MsmqResponseMessageQueue extends ReplyQueue
+{
+    public String receiveMessage()
+    {
+        return "Test Message from Msmq";
+    }
+}
+
+
+//2 cases tested.
+public class UnitTest {
+
+    public void TestCase() {
+        ConcreteFactory_Azure cfa = new ConcreteFactory_Azure() ;
+        ConcreteFactory_Msmq cfm = new ConcreteFactory_Msmq();
+
+        //dependency injection
+        Client C1 = new Client(cfa);
+        Client C2 = new Client(cfm);
+
+        //ConcreteFactory_Azure test case
+        C1.sendMessage();
+        System.out.println(C1.receiveMessage());
+
+        //ConcreteFactory_Msmq test case
+        C2.sendMessage();
+        System.out.println(C2.receiveMessage());
+    }
+}

@@ -1,0 +1,105 @@
+
+// The factory creates message queues either for Azure or MSMQ.
+// The client does not know which technology is used.
+class Client(private val factory: AbstractFactory_MessageQueue)
+{
+
+    fun sendMessage() {
+        //The client doesn't know whether the OutboundQueue is Azure or MSMQ.
+        val out = factory.createProductA()
+        out.sendMessage("Hello Abstract Factory!")
+    }
+
+    fun receiveMessage(): String {
+        //The client doesn't know whether the ReplyQueue is Azure or MSMQ.
+        val `in` = factory.createProductB()
+        return `in`.receiveMessage()
+    }
+}
+
+interface AbstractFactory_MessageQueue {
+    fun createProductA(): OutboundQueue
+    fun createProductB(): ReplyQueue
+}
+
+class ConcreteFactory_Azure : AbstractFactory_MessageQueue {
+    override fun createProductA(): OutboundQueue {
+        return AzureMessageQueue()
+    }
+
+    override fun createProductB(): ReplyQueue {
+        return AzureResponseMessageQueue()
+    }
+}
+
+
+class ConcreteFactory_Msmq : AbstractFactory_MessageQueue {
+    override fun createProductA(): OutboundQueue {
+        return MsmqMessageQueue()
+    }
+
+    override fun createProductB(): ReplyQueue {
+        return MsmqResponseMessageQueue()
+    }
+}
+
+open class OutboundQueue {
+    open fun sendMessage(sIn: String) {
+        println(sIn)
+    }
+}
+
+open class ReplyQueue {
+    open fun receiveMessage(): String {
+        return "Test Message!"
+    }
+}
+
+class AzureMessageQueue : OutboundQueue() {
+    override fun sendMessage(sIn: String) {
+        println("Get Azure message:$sIn")
+    }
+}
+
+
+class AzureResponseMessageQueue : ReplyQueue() {
+    override fun receiveMessage(): String {
+        return "Test Message from Azure"
+    }
+}
+
+
+class MsmqMessageQueue : OutboundQueue() {
+    override fun sendMessage(sIn: String) {
+        println("Get Msmq message:$sIn")
+    }
+}
+
+
+class MsmqResponseMessageQueue : ReplyQueue() {
+    override fun receiveMessage(): String {
+        return "Test Message from Msmq"
+    }
+}
+
+
+//2 cases tested.
+class UnitTest {
+
+    fun TestCase() {
+        val cfa = ConcreteFactory_Azure()
+        val cfm = ConcreteFactory_Msmq()
+
+        //dependency injection
+        val C1 = Client(cfa)
+        val C2 = Client(cfm)
+
+        //ConcreteFactory_Azure test case
+        C1.sendMessage()
+        println(C1.receiveMessage())
+
+        //ConcreteFactory_Msmq test case
+        C2.sendMessage()
+        println(C2.receiveMessage())
+    }
+}
